@@ -16,7 +16,7 @@
   <meta name="description" content="a boy enjoying the world">
   <meta name="author" content="Magic Ding">
   <meta name="keywords" content="">
-  <title>个人简介 - unkn0wn</title>
+  <title>搭建kali攻击机及windows远程连接（科普向） - unkn0wn</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -123,7 +123,7 @@
               
                 <p class="mt-3 post-meta">
                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                  星期一, 三月 9日 2020, 4:30 下午
+                  星期二, 三月 10日 2020, 2:03 下午
                 </p>
               
 
@@ -132,7 +132,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    205 字
+                    726 字
                   </span>
                 
 
@@ -140,7 +140,7 @@
                   
                   <span class="post-meta">
                       <i class="far fa-clock"></i>
-                      1 分钟
+                      2 分钟
                   </span>
                 
 
@@ -175,24 +175,63 @@
           <div class="post-content mx-auto" id="post">
             
               <p
-                class="note note-warning">本文最后更新于：星期二, 三月 10日 2020, 2:50 下午</p>
+                class="note note-warning">本文最后更新于：星期二, 三月 10日 2020, 2:22 下午</p>
             
             <div class="markdown-body">
               <blockquote>
-<p>这是我的新博客，之前的博客因为一直没更就放弃了，这次希望能坚持做下去</p>
+<p>继续移植之前的存货</p>
 </blockquote>
-<h2 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h2><p>一名末流985学校的菜鸡，计算机专业学生，软件开发爱好者，信息安全爱好者，重点方向是逆向工程。</p>
-<h2 id="准备写点什么"><a href="#准备写点什么" class="headerlink" title="准备写点什么"></a>准备写点什么</h2><p>程序开发、算法、CTF、以及一些奇怪的东西。</p>
-<h2 id="近期计划"><a href="#近期计划" class="headerlink" title="近期计划"></a>近期计划</h2><p>准备先移植一下之前在各平台发的文章之类的，会不定期更一些数据结构和信息安全内容。</p>
-<h2 id="单人博客？"><a href="#单人博客？" class="headerlink" title="单人博客？"></a>单人博客？</h2><p>会考虑让几个有想法的同学加入进来，做出一个优秀的IT博客，目前欢迎网络、软件开发、二进制、数学爱好者加入。</p>
-<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>我的邮箱：<a href="mailto:dyn201885095@gmail.com">dyn201885095@gmail.com</a></p>
-<h2 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h2><p>fun in everything</p>
+<blockquote>
+<p>想开个漏洞攻击的坑，不知道能不能填上。（这句话tmd是我半年前写的,然后一共没更几期）</p>
+</blockquote>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>漏洞利用（英语：Exploit，本意为“利用”）是计算机安全术语，指的是利用程序中的某些漏洞，来得到计算机的控制权（使自己编写的代码越过具有漏洞的程序的限制，从而获得运行权限）。在英语中，本词也是名词，表示为了利用漏洞而编写的攻击程序，即漏洞利用程序（维基百科）</p>
+<p>通俗的说，就是我们利用程序的漏洞控制程序的过程。（沃.兹及硕德）</p>
+<h2 id="攻击机搭建"><a href="#攻击机搭建" class="headerlink" title="攻击机搭建"></a>攻击机搭建</h2><p>我们使用kali linux作为攻击机，kali是基于debian的linux发行版，载有很多渗透测试和攻击程序，是一个很牛逼的攻击平台。</p>
+<p>系统安装的过程很简单，我们从北邮人下载kali linux，（当然官网下载也可以，直接百度kali就能找到链接）然后制作USB镜像，U盘引导启动即可。</p>
+<p>当然，kali也可以安装在虚拟机上，但由于本人电脑内存不太够，所以就没这么玩。</p>
+<p>科中的kali安装在我的U盘上，有需求的同学可以到.62体验，U盘引导启动进入kali，硬盘引导启动进入ubuntu16.04。</p>
+<p>4  windows远程连接</p>
+<p>kali装完了，下一个问题出现了，我们基地有几十名同学，总不能每一次想用kali都到我这去用，这样会很麻烦（这样我会很烦），因此我们要做一个windows远程连接。</p>
+<p>说明：kali linux科中已经配置完成，不要在.62重新配置（无关人员自行跳过）</p>
+<p>首先，我们打开kali的控制台（ctrl+alt+t）</p>
+<p>我们先查看kali的ssh配置</p>
+<blockquote>
+<p>/etc/ssh/sshd_config</p>
+</blockquote>
+<p>然后，我们将以下变量按照下面的代码修改</p>
+<pre><code>port 22
+PermitRootLogin yes
+PubkeyAuthentication yes</code></pre><p>保存退出(wq)</p>
+<p>输入下面的命令打开kali ssh（每次开机都要重新打开）</p>
+<blockquote>
+<p>service ssh start</p>
+</blockquote>
+<p>输入ifconfig（注意，不是ipconfig）查看ip</p>
+<p>记下ip和上面的port 22。</p>
+<p>(以上过程科中已经配置完成，不需要重新配置）</p>
+<p>回到自己的电脑，我们使用Xshell进行远程连接，下载Xshell就不贴地址了，google是你的好朋友。</p>
+<p>新建会话属性——&gt;主机ip设置，端口设置——&gt;创建<br><a href="https://imgchr.com/i/8P0og1" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8P0og1.jpg" srcset="/img/loading.gif" alt="8P0og1.jpg" border="0" /></a><br>打开——&gt;连接——&gt;你建的会话的名字<br><a href="https://imgchr.com/i/8P0z8A" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8P0z8A.jpg" srcset="/img/loading.gif" alt="8P0z8A.jpg" border="0" /></a></p>
+<p>会提示你输入root密码，密码科中的同学们应该都知道，不知道的问我也行。(如果你是路人的话你自己搭的肯定知道密码。。。下面的回复好奇怪)</p>
+<p>如果运行成功，会显示root@kali，这代表你进入了kali的终端。</p>
+<p>尝试ifconfig<br><a href="https://imgchr.com/i/8PBe8s" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8PBe8s.jpg" srcset="/img/loading.gif" alt="8PBe8s.jpg" border="0" /></a></p>
+<p>快乐由此开始</p>
 
             </div>
             <hr>
             <div>
               <p>
                 
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%A7%91%E6%99%AE/">科普</a>
+                    
+                  </span>
                 
               </p>
               
@@ -414,7 +453,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "个人简介&nbsp;",
+        "搭建kali攻击机及windows远程连接（科普向）&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

