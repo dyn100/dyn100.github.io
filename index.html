@@ -148,6 +148,56 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/11/linklist3/">
+        <p class="h4 index-header">线性表练习整理</p>
+      </a>
+
+      <a href="/2020/03/11/linklist3/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+这是上周老师布置的线性表和链表的一些习题，现在把代码粘在这里从本期开始，鄙人将开始完全放飞自我，不会吝啬任何标准库C++语句（保证数据结构为C语言结构以及设计思想仍为面向过程）
+
+顺序表question1 插入
+
+tips：为了加快遍历速度。采用了二分查找
+
+#include&lt;iostream&gt;
+using namespace std;
+
+int search(int n,int x,int *p) //二分查找，确定插入位置 
+{
+    int l=0,r=n-1,mid=(l+r)/2;
+    if(p[r]&lt;x)
+        return r+1; 
+    </div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-11&nbsp;&nbsp;
+        
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>&nbsp;
+          
+            <a href="/tags/C/">C++</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2020/03/10/dig2/">
         <p class="h4 index-header">ms08_067经典漏洞复现</p>
       </a>
