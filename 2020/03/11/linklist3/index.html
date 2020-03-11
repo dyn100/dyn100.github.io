@@ -132,7 +132,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    1.6k 字
+                    1.7k 字
                   </span>
                 
 
@@ -140,7 +140,7 @@
                   
                   <span class="post-meta">
                       <i class="far fa-clock"></i>
-                      8 分钟
+                      9 分钟
                   </span>
                 
 
@@ -175,7 +175,7 @@
           <div class="post-content mx-auto" id="post">
             
               <p
-                class="note note-warning">本文最后更新于：星期三, 三月 11日 2020, 8:28 晚上</p>
+                class="note note-warning">本文最后更新于：星期三, 三月 11日 2020, 8:50 晚上</p>
             
             <div class="markdown-body">
               <blockquote>
@@ -482,25 +482,23 @@ using namespace std;
 
 typedef struct node {
     int data;
-    int factorial;
     node* next;
 }node, * linklist;
 
 //创建链表
 int create(linklist&amp; p) {
     p = new node;
-    int len, num, num2;
+    int len, num;
     linklist tmp, tmp2;
     p-&gt;next = NULL;
     tmp = p;
     cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度
     cin &gt;&gt; len;
-    cout &lt;&lt; &quot;input data and factorial&quot; &lt;&lt; endl; //输入系数和阶乘
+    cout &lt;&lt; &quot;input data&quot; &lt;&lt; endl; //输入数据
     for (int i = 0; i &lt; len; i++) {
-        cin &gt;&gt; num &gt;&gt; num2;  //输入数据
+        cin &gt;&gt; num ;  //输入数据
         tmp2 = new node;
         tmp2-&gt;data = num;
-        tmp2-&gt;factorial = num2;
         tmp2-&gt;next = NULL;
         tmp-&gt;next = tmp2;
         tmp = tmp-&gt;next;
@@ -509,31 +507,72 @@ int create(linklist&amp; p) {
 }
 
 
-//计算,参数为链表和变量
-int calc(linklist&amp; p, int num) {
-    linklist tmp = p;
-    int ans = 0;
-    while (tmp-&gt;next != NULL) {
-        tmp = tmp-&gt;next;
-        ans = ans + tmp-&gt;data * (pow(num, tmp-&gt;factorial));
-
+void insert(linklist&amp; pa, linklist&amp; pb) {
+    linklist a1 = pa;
+    linklist b1 = pb;
+    int num = 0;
+    linklist a2 = pa-&gt;next;
+    b1 = b1-&gt;next;
+    while (a2-&gt;next!=NULL &amp;&amp; b1 != NULL) {
+        if (b1-&gt;data &lt;= a2-&gt;data) {
+            linklist tmp = a1;
+            tmp -&gt; next = b1;
+            linklist tmp2 = b1;
+            b1 = b1-&gt;next;
+            tmp2-&gt;next = a2;
+            a1 = tmp2;
+            num = 0;
+        }
+        else if (b1-&gt;data &gt; a2-&gt;data) {
+            a1 = a1-&gt;next;
+            a2 = a2-&gt;next;
+            num = 1;
+        }    
+    }
+    if (num == 1) {
+        a2-&gt;next = b1;
     }
 
-    return ans;
+}
+linklist reverse(linklist &amp;pa)
+{
+    linklist p1 = pa;
+    linklist p2 = pa-&gt;next;
+    linklist p3 = pa-&gt;next-&gt;next;
+    p1-&gt;next = NULL;
+    while (p2-&gt;next != NULL) {
+        p2-&gt;next = p1;
+        p1 = p2;
+        p2 = p3;
+        p3 = p3-&gt;next;
+    }
+    p2-&gt;next = p1;
+    return p2;
 
 }
 
+
+void print(linklist&amp; pa) {
+    linklist tmp = pa;
+    while (tmp-&gt;next != NULL) {
+        cout &lt;&lt; tmp-&gt;data &lt;&lt; endl;
+        tmp = tmp-&gt;next;
+    }
+}
 int main() {
-    linklist p;
-    int num, sum;
-    create(p);
-    cout &lt;&lt; &quot;imput data&quot; &lt;&lt; endl;
-    cin &gt;&gt; num;
-    sum = calc(p, num);
-    cout &lt;&lt; &quot;answer：&quot; &lt;&lt; sum &lt;&lt; endl;
+    linklist pa,pb,pc;
+    int num;
+    create(pa);
+    create(pb);
+    insert(pa, pb);
+    pc=reverse(pa);
+    //print(pa);
+    //print(pb);
+    //reverse(pa);
+    print(pc);
 
-
-}</code></pre>
+}
+</code></pre>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>代码问题还是有很多的，毕竟为了应付作业，没太考虑简化代码，欢迎大家提出意见</p>
 
             </div>
