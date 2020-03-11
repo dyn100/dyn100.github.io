@@ -175,7 +175,7 @@
           <div class="post-content mx-auto" id="post">
             
               <p
-                class="note note-warning">本文最后更新于：星期三, 三月 11日 2020, 8:50 晚上</p>
+                class="note note-warning">本文最后更新于：星期三, 三月 11日 2020, 9:02 晚上</p>
             
             <div class="markdown-body">
               <blockquote>
@@ -513,7 +513,7 @@ void insert(linklist&amp; pa, linklist&amp; pb) {
     int num = 0;
     linklist a2 = pa-&gt;next;
     b1 = b1-&gt;next;
-    while (a2-&gt;next!=NULL &amp;&amp; b1 != NULL) {
+    while (a2 !=NULL &amp;&amp; b1 != NULL) {
         if (b1-&gt;data &lt;= a2-&gt;data) {
             linklist tmp = a1;
             tmp -&gt; next = b1;
@@ -525,6 +525,10 @@ void insert(linklist&amp; pa, linklist&amp; pb) {
         }
         else if (b1-&gt;data &gt; a2-&gt;data) {
             a1 = a1-&gt;next;
+            if (a2-&gt;next == NULL) {
+                num = 1;
+                break;
+            }
             a2 = a2-&gt;next;
             num = 1;
         }    
@@ -534,6 +538,7 @@ void insert(linklist&amp; pa, linklist&amp; pb) {
     }
 
 }
+
 linklist reverse(linklist &amp;pa)
 {
     linklist p1 = pa;
