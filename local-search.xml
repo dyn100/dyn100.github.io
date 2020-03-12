@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Hack.lu-2017 The_Maya_Society题解</title>
+    <link href="/2020/03/12/the-maya-society/"/>
+    <url>/2020/03/12/the-maya-society/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>在逆向面前，dyn无时无刻都在感受自己的渺小。。。</p></blockquote><p>题目地址：<a href="https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip" target="_blank" rel="noopener">https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip</a></p><p>题目描述：无</p><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>拿到这道题之后，看到html文件和launcher程序，当时没明白html文件的作用，做完之后怀疑是下载launcher程序用的。</p><p><a href="https://imgchr.com/i/8mt3o6" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mt3o6.png" srcset="/img/loading.gif" alt="8mt3o6.png" border="0" /></a></p><h2 id="查壳"><a href="#查壳" class="headerlink" title="查壳"></a>查壳</h2><p>将程序导入peid，经查，无壳，elf文件，64bit</p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>老规矩，用gdb-pwndbg和ida进行联合调试</p><h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><blockquote><p>恕在下孤陋寡闻，静态分析相比于很多大神的思路差的太远，不过还是看到了一些有用的东西</p></blockquote><p><a href="https://imgchr.com/i/8mdIu4" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mdIu4.png" srcset="/img/loading.gif" alt="8mdIu4.png" border="0" /></a></p><p>这里应该是一个md5加密，疑似是对不明格式时间字符串进行加密</p><p><a href="https://imgchr.com/i/8m0GFI" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8m0GFI.png" srcset="/img/loading.gif" alt="8m0GFI.png" border="0" /></a></p><p>这一串可能是几串字符串的合并过程</p><p><a href="https://imgchr.com/i/8m040J" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8m040J.png" srcset="/img/loading.gif" alt="8m040J.png" border="0" /></a></p><p>这个函数我没看懂。。。</p><p><a href="https://imgchr.com/i/8mBkjS" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mBkjS.png" srcset="/img/loading.gif" alt="8mBkjS.png" border="0" /></a></p><p>base64解密</p><p><a href="https://imgchr.com/i/8mBf8P" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mBf8P.png" srcset="/img/loading.gif" alt="8mBf8P.png" border="0" /></a></p><p>异或0x25</p><p>经过一系列静态分析和试运行，我发现了一些关键点：题目中没有输入，很可能是对时间进行加解密（这个就可以确定时间是我们需要修改的），加密过程经过了md5，字符串合成，18a4函数，b64，异或0x25得到flag</p><h3 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h3><p>下面我们进入动态调试，第一次先不改时间，前面都照常运行，而且我们发现合并的字符串是md5加密后的时间与”.fluxfingers.net”合成。但是进入18a4之后出现了问题，我们发现只有正确的时间才能使程序完成判断过程继续执行，显然这个时间是一定要得到的（后面加密完全是依靠时间），因此我们看一下题目：maya，html里满满的世界末日气息。。。那就猜2012-12-21，开始正式的调试。</p><p>首先在1a8C处下断点，将rax寄存器的时间串修改为2012-12-21</p><p>之后再18a4断下，发现程序能够正常执行，并得到了一串base64字符串</p><p>其实到这一步，我们已经可以脱离调试器：解码base64，异或0x25，得到flag，当然，也可以选择调试到最后</p><blockquote><p>在这里，dyn跳的有点多了，导致自己丢了（也可能是没找到）最后的flag，但是没关系，我们找到了异或0x25之前的数据，把数据导出来异或一样可以得到flag</p></blockquote><p><a href="https://imgchr.com/i/8myCVg" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8myCVg.png" srcset="/img/loading.gif" alt="8myCVg.png" border="0" /></a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这道题脑洞是真的大，也算是让我费了很大的精力（早晚死于调试），不过能得到flag还是很高兴的。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题目复现</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>Re</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>线性表练习整理</title>
     <link href="/2020/03/11/linklist3/"/>
     <url>/2020/03/11/linklist3/</url>
@@ -150,7 +177,7 @@
     
     <categories>
       
-      <category>攻防世界wp</category>
+      <category>CTF题目浮现</category>
       
     </categories>
     

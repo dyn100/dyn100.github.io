@@ -16,7 +16,7 @@
   <meta name="description" content="a boy enjoying the world">
   <meta name="author" content="Magic Ding">
   <meta name="keywords" content="">
-  <title>攻防世界 MISC 新手村攻略 - unkn0wn</title>
+  <title>Hack.lu-2017 The_Maya_Society题解 - unkn0wn</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -131,7 +131,7 @@
               
                 <p class="mt-3 post-meta">
                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                  星期二, 三月 10日 2020, 11:02 上午
+                  星期四, 三月 12日 2020, 9:05 晚上
                 </p>
               
 
@@ -140,7 +140,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    585 字
+                    628 字
                   </span>
                 
 
@@ -187,29 +187,37 @@
             
             <div class="markdown-body">
               <blockquote>
-<p>作为一名逆向手，MISC之前看别人做一直感觉好玩但没碰过(此前一直羡慕队里的MISC手），真正做起来感觉这玩意还是挺烧脑的，脑洞不够的我着实玩不起/xk/xk</p>
+<p>在逆向面前，dyn无时无刻都在感受自己的渺小。。。</p>
 </blockquote>
-<p>题目地址： <a href="https://adworld.xctf.org.cn/task/task_list?type=misc&amp;number=1&amp;grade=0&amp;page=1" target="_blank" rel="noopener">https://adworld.xctf.org.cn/task/task_list?type=misc&amp;number=1&amp;grade=0&amp;page=1</a></p>
-<h2 id="this-is-flag"><a href="#this-is-flag" class="headerlink" title="this_is_flag"></a>this_is_flag</h2><p>签到题，flag题干直接给了</p>
-<h2 id="PDF"><a href="#PDF" class="headerlink" title="PDF"></a>PDF</h2><p>题干中提到图片下面什么都没有，所以我们把图片移走就好了，flag在下面</p>
-<p>这题大佬们似乎都用的PDF编辑器，我这种业余玩家是把PDF转成word来弄的，实现此功能有个靠谱的网站：<br><a href="https://app.xunjiepdf.com/pdf2word/" target="_blank" rel="noopener">https://app.xunjiepdf.com/pdf2word/</a></p>
-<h2 id="give-you-flag"><a href="#give-you-flag" class="headerlink" title="give_you_flag"></a>give_you_flag</h2><p>动态图按贞分解发现了疑似二维码，但是这个二维码好像缺了点什么。。<br><img src="https://s2.ax1x.com/2020/03/10/8CjHe0.png" srcset="/img/loading.gif" alt="8CjHe0.png" border="0" /><br>拿个正常二维码对比一下，发现是少了三个角，修复之后如下：<br><a href="https://imgchr.com/i/8CvLnI" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8CvLnI.th.png" srcset="/img/loading.gif" alt="8CvLnI.png" border="0" /></a><br>扫描得flag</p>
-<h2 id="如来十三掌"><a href="#如来十三掌" class="headerlink" title="如来十三掌"></a>如来十三掌</h2><p>与佛论禅编码，发现疑似base64，但是解不开，考虑到题干中有13，于是想到了rot13，rot13后再进行base64解码，推荐一个网站： <a href="http://ctf.ssleye.com/" target="_blank" rel="noopener">http://ctf.ssleye.com/</a> ，可以实现大部分简单编码、密码加解密。</p>
-<p>flag{bdscjhbkzmnfrdhbvckijndskvbkjdsab}</p>
-<h2 id="gif"><a href="#gif" class="headerlink" title="gif"></a>gif</h2><p>黑白图片，进行白为0黑为1的转换得到：01100110011011000110000101100111011110110100011001110101010011100101111101100111011010010100011001111101<br>二进制转字符串，仍然可以使用上面的网页完成</p>
-<p>flag{FuN_giF}</p>
-<h2 id="坚持60s"><a href="#坚持60s" class="headerlink" title="坚持60s"></a>坚持60s</h2><p>菜鸡终于看见一道属于自己的本职工作了（得以嘲讽队内MISC大佬们）<br>jar文件，jd-gui直接看源码就行<br><img src="https://s2.ax1x.com/2020/03/10/8CxhKs.png" srcset="/img/loading.gif" alt="8CxhKs.png" border="0" /></p>
-<h2 id="掀桌子"><a href="#掀桌子" class="headerlink" title="掀桌子"></a>掀桌子</h2><p>一串16进制数，按ascii码分析，感觉这些数都太大了，突然发现每个数-0x80之后都在可见字符范围内，python脚本给上：</p>
-<pre><code class="python">string = &quot;c8e9aca0c6f2e5f3e8c4efe7a1a0d4e8e5a0e6ece1e7a0e9f3baa0e8eafae3f9e4eafae2eae4e3eaebfaebe3f5e7e9f3e4e3e8eaf9eaf3e2e4e6f2&quot;
-flag = &#39;&#39;
-for i in range(0,len(string), 2):
-    s = &quot;0x&quot; + string[i] + string[i+1]
-    flag += chr(int(s, 16) - 0x80)
-print(flag)</code></pre>
-<h2 id="ext3"><a href="#ext3" class="headerlink" title="ext3"></a>ext3</h2><p>linux映像文件，ubuntu导入映像，翻文件翻到flag（ls，cd，cat大法）</p>
-<h2 id="stegano"><a href="#stegano" class="headerlink" title="stegano"></a>stegano</h2><p>用记事本打开看到一堆AB，疑似摩尔斯电码，转化发现flag</p>
-<h2 id="base64stego"><a href="#base64stego" class="headerlink" title="base64stego"></a>base64stego</h2><p>涉及到base64隐写问题，看大佬分析吧<a href="https://blog.csdn.net/zz_Caleb/article/details/89298335" target="_blank" rel="noopener">https://blog.csdn.net/zz_Caleb/article/details/89298335</a></p>
-<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>还有两道题没做，以后再补吧（又鸽了）。话说MISC确实很好玩，不过我也是菜，几道入门题玩了这么长时间。。。以后有时间还会继续玩的</p>
+<p>题目地址：<a href="https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip" target="_blank" rel="noopener">https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip</a></p>
+<p>题目描述：无</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>拿到这道题之后，看到html文件和launcher程序，当时没明白html文件的作用，做完之后怀疑是下载launcher程序用的。</p>
+<p><a href="https://imgchr.com/i/8mt3o6" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mt3o6.png" srcset="/img/loading.gif" alt="8mt3o6.png" border="0" /></a></p>
+<h2 id="查壳"><a href="#查壳" class="headerlink" title="查壳"></a>查壳</h2><p>将程序导入peid，经查，无壳，elf文件，64bit</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>老规矩，用gdb-pwndbg和ida进行联合调试</p>
+<h3 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h3><blockquote>
+<p>恕在下孤陋寡闻，静态分析相比于很多大神的思路差的太远，不过还是看到了一些有用的东西</p>
+</blockquote>
+<p><a href="https://imgchr.com/i/8mdIu4" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mdIu4.png" srcset="/img/loading.gif" alt="8mdIu4.png" border="0" /></a></p>
+<p>这里应该是一个md5加密，疑似是对不明格式时间字符串进行加密</p>
+<p><a href="https://imgchr.com/i/8m0GFI" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8m0GFI.png" srcset="/img/loading.gif" alt="8m0GFI.png" border="0" /></a></p>
+<p>这一串可能是几串字符串的合并过程</p>
+<p><a href="https://imgchr.com/i/8m040J" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8m040J.png" srcset="/img/loading.gif" alt="8m040J.png" border="0" /></a></p>
+<p>这个函数我没看懂。。。</p>
+<p><a href="https://imgchr.com/i/8mBkjS" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mBkjS.png" srcset="/img/loading.gif" alt="8mBkjS.png" border="0" /></a></p>
+<p>base64解密</p>
+<p><a href="https://imgchr.com/i/8mBf8P" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8mBf8P.png" srcset="/img/loading.gif" alt="8mBf8P.png" border="0" /></a></p>
+<p>异或0x25</p>
+<p>经过一系列静态分析和试运行，我发现了一些关键点：题目中没有输入，很可能是对时间进行加解密（这个就可以确定时间是我们需要修改的），加密过程经过了md5，字符串合成，18a4函数，b64，异或0x25得到flag</p>
+<h3 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h3><p>下面我们进入动态调试，第一次先不改时间，前面都照常运行，而且我们发现合并的字符串是md5加密后的时间与”.fluxfingers.net”合成。但是进入18a4之后出现了问题，我们发现只有正确的时间才能使程序完成判断过程继续执行，显然这个时间是一定要得到的（后面加密完全是依靠时间），因此我们看一下题目：maya，html里满满的世界末日气息。。。那就猜2012-12-21，开始正式的调试。</p>
+<p>首先在1a8C处下断点，将rax寄存器的时间串修改为2012-12-21</p>
+<p>之后再18a4断下，发现程序能够正常执行，并得到了一串base64字符串</p>
+<p>其实到这一步，我们已经可以脱离调试器：解码base64，异或0x25，得到flag，当然，也可以选择调试到最后</p>
+<blockquote>
+<p>在这里，dyn跳的有点多了，导致自己丢了（也可能是没找到）最后的flag，但是没关系，我们找到了异或0x25之前的数据，把数据导出来异或一样可以得到flag</p>
+</blockquote>
+<p><a href="https://imgchr.com/i/8myCVg" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/12/8myCVg.png" srcset="/img/loading.gif" alt="8myCVg.png" border="0" /></a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这道题脑洞是真的大，也算是让我费了很大的精力（早晚死于调试），不过能得到flag还是很高兴的。</p>
 
             </div>
             <hr>
@@ -219,7 +227,7 @@ print(flag)</code></pre>
                   <span>
                 <i class="iconfont icon-inbox"></i>
                     
-                      <a class="hover-with-bg" href="/categories/CTF%E9%A2%98%E7%9B%AE%E6%B5%AE%E7%8E%B0/">CTF题目浮现</a>
+                      <a class="hover-with-bg" href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>
                       &nbsp;
                     
                   </span>&nbsp;&nbsp;
@@ -230,7 +238,7 @@ print(flag)</code></pre>
                     
                       <a class="hover-with-bg" href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>
                     
-                      <a class="hover-with-bg" href="/tags/MISC/">MISC</a>
+                      <a class="hover-with-bg" href="/tags/Re/">Re</a>
                     
                   </span>
                 
@@ -454,7 +462,7 @@ print(flag)</code></pre>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "攻防世界 MISC 新手村攻略&nbsp;",
+        "Hack.lu-2017 The_Maya_Society题解&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
