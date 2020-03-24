@@ -4,13 +4,25 @@
   
   
   <entry>
-    <title>oldcry</title>
-    <link href="/2020/03/12/oldcry/"/>
-    <url>/2020/03/12/oldcry/</url>
+    <title>关于链表的一些小练习</title>
+    <link href="/2020/03/21/linklist4/"/>
+    <url>/2020/03/21/linklist4/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<blockquote><p>关于链表的一个设计练习</p></blockquote><p><a href="https://imgchr.com/i/8HVEi6" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/23/8HVEi6.md.png" srcset="/img/loading.gif" alt="8HVEi6.png" border="0" /></a></p><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;   // 系数    int data2;  // 指数    node* next;}node, * linklist;void create(linklist &amp;p) {    p = new node;    int len,num,num2,rec;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data（依次输入系数和指数）&quot; &lt;&lt; endl; // 依次输入系数 指数    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num&gt;&gt;num2;//输入数据        if (i != 0) {            if (rec &gt; num2) {                cout &lt;&lt; &quot;invalid,创建失败&quot; &lt;&lt; endl;                return;            }        }        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;data2 = num2;        rec = num2;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }}void print(linklist&amp; p) {    linklist tmp = p;    while (tmp-&gt;next != NULL)    {        tmp = tmp-&gt;next;        cout &lt;&lt; tmp-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp-&gt;data2 &lt;&lt; endl;    }}linklist reverse(linklist&amp; t) {    cout &lt;&lt; &quot;逆置完成请重新创建链表&quot; &lt;&lt; endl;    linklist tmp1, tmp2,tmp3;    tmp1 = t;    tmp2 = t-&gt;next;    if (t-&gt;next-&gt;next != NULL) {        tmp3 = t-&gt;next-&gt;next;    }    else {        tmp1-&gt;next = NULL;        tmp2-&gt;next = tmp1;        t = tmp2;        linklist tmp4 = t;        while (tmp4-&gt;next != NULL)        {            cout &lt;&lt; tmp4-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp4-&gt;data2 &lt;&lt; endl;            tmp4 = tmp4-&gt;next;        }        return t;    }    tmp1-&gt;next = NULL;    while (tmp3 != NULL) {        tmp2-&gt;next = tmp1;        tmp1 = tmp2;        tmp2 = tmp3;        tmp3 = tmp3-&gt;next;    }    tmp2-&gt;next = tmp1;    t = tmp2;    linklist tmp4 = t;    while (tmp4-&gt;next != NULL)    {        cout &lt;&lt; tmp4-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp4-&gt;data2 &lt;&lt; endl;        tmp4 = tmp4-&gt;next;    }    return t;}linklist deri(linklist &amp;p) {    linklist tmp = p;    linklist tmp2=new node;    linklist tmp4 = tmp2;    while (tmp-&gt;next != NULL) {        tmp = tmp-&gt;next;        if (tmp-&gt;data2 == 0) {            linklist tmp3 = new node;            tmp3-&gt;data = 0;            tmp3-&gt;data2 = 0;            tmp3-&gt;next = NULL;            tmp4-&gt;next = tmp3;            tmp4 = tmp4-&gt;next;        }        else {            linklist tmp3 = new node;            tmp3-&gt;data = tmp-&gt;data*tmp-&gt;data2;            tmp3-&gt;data2 = tmp-&gt;data2-1;            tmp3-&gt;next = NULL;            tmp4-&gt;next = tmp3;            tmp4 = tmp4-&gt;next;        }    }    print(tmp2);    return tmp2;} void sum(linklist&amp; p, linklist&amp; p2) {     linklist tmp, tmp2;     tmp = p;     tmp2 = p2-&gt;next;     while (tmp-&gt;next != NULL &amp;&amp; tmp2 != NULL) {         if (tmp2-&gt;data2 &lt; tmp-&gt;next-&gt;data2) {             linklist tmp3 = tmp2;             tmp2 = tmp2-&gt;next;             tmp3-&gt;next = tmp-&gt;next;             tmp-&gt;next = tmp3;             tmp = tmp-&gt;next;         }         else if (tmp2-&gt;data2 == tmp-&gt;next-&gt;data2) {             tmp-&gt;next-&gt;data = tmp-&gt;next-&gt;data + tmp2-&gt;data;             tmp2 = tmp2-&gt;next;         }         else {             tmp = tmp-&gt;next;         }     }     if (tmp2 != NULL) {         tmp-&gt;next = tmp2;     }}void del(linklist&amp; p, linklist&amp; a, linklist&amp; b){    linklist tmp1, tmp2, tmp3;    tmp1 = p;    tmp2 = a-&gt;next;    tmp3 = b-&gt;next;    while (tmp1-&gt;next != NULL &amp;&amp; tmp2 != NULL &amp;&amp; tmp3 != NULL) {        if (tmp2-&gt;data == tmp3-&gt;data) {            if (tmp2-&gt;data == tmp1-&gt;next-&gt;data) {                tmp1-&gt;next = tmp1-&gt;next-&gt;next;            }            else if (tmp2-&gt;data &lt; tmp1-&gt;next-&gt;data) {                tmp2 = tmp2-&gt;next;                continue;            }            else {                tmp1 = tmp1-&gt;next;            }        }        else if (tmp2-&gt;data &lt; tmp3-&gt;data) {            tmp2 = tmp2-&gt;next;        }        else {            tmp3 = tmp3-&gt;next;        }    }}void main() {    linklist p;    int i;    while (1) {        cout &lt;&lt; &quot;选择（请先创建链表）&quot; &lt;&lt; endl;        cout &lt;&lt; &quot;0 创建 1 输出 2 逆置 3 导数 4 求和 5 删除&quot; &lt;&lt; endl;        cin &gt;&gt; i;        switch (i){        case 0: //创建一个指数递增的链表            create(p);            continue;        case 1: //输出多项式            print(p);            continue;        case 2: //就地逆置            reverse(p);            continue;        case 3: //求导            deri(p);            continue;        case 4: //求和            linklist q;            create(q);            sum(p, q);            continue;        case 5: //删除，以data为标志            linklist a, b;            create(a);            create(b);            del(p, a, b);            continue;        }    }}</code></pre>]]></content>
     
     
+    <categories>
+      
+      <category>数据结构与算法</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>C++</tag>
+      
+    </tags>
     
   </entry>
   
