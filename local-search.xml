@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>简单了解TCP协议</title>
+    <link href="/2020/04/14/TCP/"/>
+    <url>/2020/04/14/TCP/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一个故事"><a href="#一个故事" class="headerlink" title="一个故事"></a>一个故事</h2><blockquote><p>这是从“码农翻身”公众号上转载的一个故事，这个故事很形象的展示了TCP/IP协议的运作。</p></blockquote><p>我们先看一个故事来简单了解一下TCP协议大致是什么样的。（此故事转载自TCP/IP 之大明王朝邮差及大明内阁，有修改）</p><p>大明天启年间，宦官当政，民不聊生，国家处于崩溃边缘（所有朝代gg的时候似乎都是这样的），官道早已荒废，往来的奏报、物资经常被强盗劫走，朝廷兵力不足，对此无可奈何。</p><p>首辅叶大人不想坐以待毙，研究建立了一套运输方案：在各地设置节点，各节点之间可以连接形成线路，需要运送物资时便在道路上布置士兵把守，运送结束后再撤掉士兵。</p><p>现在，我们短暂穿越回现代，按照现代人的知识储备，我们知道，这就是虚电路。</p><p><a href="https://imgchr.com/i/Gx7aOU" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/14/Gx7aOU.png" srcset="/img/loading.gif" alt="Gx7aOU.png"></a></p><p>回到大明王朝，“虚电路”运行了半年，整体效果很好，但也存在通道不发送信件就会闲置浪费的问题。大太监魏忠贤得知此事，以浪费国家资源为由命令官员们停止，运输计划只能暂时搁置。</p><p>这时，又有官员提出了一套新的方案，不用军队在官道站岗，不用建立安全的连接通道，完全依靠马匹、骡子这样的牲畜进行通信，这些马是训练过的，身上带着信件或者物资， 可以在官道上走，每到一个驿站或者市镇，里边的衙役看看信件的目的地，喂喂马，然后把马引到下一个官道就可以了， 很省事。 当然具体到那个官道是衙役决定的， 他会搜集各种消息，确定哪个官道匪患少、虎狼少。（穿越回现代，我们了解到这就是路由表构建及转发数据分组）</p><p>当然，这套方案仍有问题，大家可能也看出来了，这个方案不能保证运输物资的顺利到达。于是，有人提出将包裹分成小块运输，如果有没有传过去的物资就重新发送（此时的大明拥有神器幻月宝镜， 丢了的东西可以从中再取出来）。同时，不需要事先建立真正的连接通道， 每个编号小块走的路可能也不一样， 完全由中间节点的衙役们来决定马匹的下一个路径是哪一个。（这就是分组交换）</p><img src="https://s1.ax1x.com/2020/04/14/GxHd3t.png" srcset="/img/loading.gif" alt="GxHd3t.png" border="0" /><p>想必此时的你还有一个疑惑，我们如何判断选择的路径是否通畅呢？面对这个问题，有官员解释道，我们可以先发三封信：<br>第一封：京城发信，县衙收到了，此时县衙就会明白：京城发信能力和自己的收信能力是没问题的<br>第二封：县衙发信，京城收到了，此时京城就会明白：京城的发信和收信都是好的， 县衙的发信和收信也都是没问题的。<br>第三封：京城发信，县衙收到了，此时京城已经确认，双发的收信，发信都是没问题的，　这次回应的目的只是消除县衙对自己的发信功能和京城的收信功能的担忧而已。（这就是TCP线路创建时三次握手的原理）</p><p>当传输完成时，也通过互发信件的过程终止传输，不过终止需要四封信件，即需要双方均向对方发送信件请求停止，并双方均回信完成确认，这就是结束时四次挥手</p><p>通过这样的线路，大明王朝拥有了一套高效稳定的运输方案，摇摇欲坠王朝也得到短暂的喘息。穿越回现代的我们，在领略了这套传输过程之后，应该也对TCP协议有了初步的认识。下面，让我们更细致的学习TCP协议的原理。</p><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>维基百科上对于TCP协议的定义为：传输控制协议（英语：Transmission Control Protocol，缩写：TCP）是一种面向连接的、可靠的、基于字节流的传输层通信协议，由IETF的RFC 793定义。在简化的计算机网络OSI模型中，它完成第四层传输层所指定的功能。</p><p>简单地说，互联网由一整套协议构成，TCP作为其中的一层，有自己的分工。而TCP 协议的作用是，保证数据通信的完整性和可靠性，防止丢包。<br><img src="https://s1.ax1x.com/2020/04/14/GxbSbD.png" srcset="/img/loading.gif" alt="GxbSbD.png" border="0" /></p><h2 id="运作模式"><a href="#运作模式" class="headerlink" title="运作模式"></a>运作模式</h2><h3 id="创建通路"><a href="#创建通路" class="headerlink" title="创建通路"></a>创建通路</h3><p>TCP通过三次握手创建一个连接，在连接创建过程中，很多参数要被初始化，例如序号被初始化以保证按序传输和连接的强壮性。</p><p>通常情况下，一端先打开一个套接字监听另一方连接，这一端称为服务端，服务端打开后，客户端开始创建主动打开：<br>（1）客户端通过向服务器端发送一个SYN来创建一个主动打开，作为三次握手的一部分。客户端把这段连接的序号设定为随机数A。<br>（2）服务器端应当为一个合法的SYN回送一个SYN/ACK。ACK的确认码应为A+1，SYN/ACK包本身又有一个随机产生的序号B。<br>（3）最后，客户端再发送一个ACK。此时包的序号被设定为A+1，而ACK的确认码则为B+1。当服务端收到这个ACK的时候，就完成了三次握手，并进入了连接创建状态。</p><p>是不是觉得这个过程和故事中的发三封信相同？这就是三次握手的实际运作形式。</p><img src="https://s1.ax1x.com/2020/04/14/GxbqeS.png" srcset="/img/loading.gif" alt="GxbqeS.png" border="0" /><h3 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h3><p>首先介绍一下数据包的概念：</p><p>以太网数据包（packet）的大小是固定的，最初是1518字节，后来增加到1522字节。其中， 1500 字节是负载（payload），22字节是头信息（head）。<br><a href="https://imgchr.com/i/GxqVY9" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/14/GxqVY9.md.png" srcset="/img/loading.gif" alt="GxqVY9.png" border="0" /></a><br>以太网数据包之下是IP数据包，IP数据包也有自己的头信息，具体的会在接下来的IP协议章节中说明。</p><p>IP数据包之下才是TCP数据包，TCP数据包也有自己的头信息，因此实际应用层往往仅有1400字节左右，如果传输的数据量更大，则需要分包传输<br><a href="https://imgchr.com/i/Gxqwm8" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/14/Gxqwm8.md.png" srcset="/img/loading.gif" alt="Gxqwm8.png" border="0" /></a></p><p>接下来让我们来研究发送过程：</p><p>首先，发送的时候，TCP 协议为每个包编号（sequence number，简称 SEQ），以便接收的一方按照顺序还原。万一发生丢包，也可以知道丢失的是哪一个包。</p><p>第一个包的编号是一个随机数。为了便于理解，这里就把它称为1号包。假定这个包的负载长度是100字节，那么可以推算出下一个包的编号应该是101。这就是说，每个数据包都可以得到两个编号：自身的编号，以及下一个包的编号。接收方由此知道，应该按照什么顺序将它们还原成原始文件</p><p>发送完成后，操作系统会按顺序完成组装，传输完成。</p><h3 id="终结通路"><a href="#终结通路" class="headerlink" title="终结通路"></a>终结通路</h3><p>连接终止使用了四路握手过程（或称四次握手，four-way handshake），在这个过程中连接的每一侧都独立地被终止。当一个端点要停止它这一侧的连接，就向对侧发送FIN，对侧回复ACK表示确认。因此，拆掉一侧的连接过程需要一对FIN和ACK，分别由两侧端点发出。下图很清晰的说明了此过程<br><a href="https://imgchr.com/i/GxqLX6" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/14/GxqLX6.png" srcset="/img/loading.gif" alt="GxqLX6.png" border="0" /></a></p><h2 id="TCP协议可靠的原因"><a href="#TCP协议可靠的原因" class="headerlink" title="TCP协议可靠的原因"></a>TCP协议可靠的原因</h2><p>下面介绍一些TCP协议可靠的原因（不全面，介绍几个有代表性的）<br>1.确认和重传机制：建立连接时三次握手同步双方的“序列号 + 确认号 + 窗口大小信息”，是确认重传、流控的基础。传输过程中，如果Checksum校验失败、丢包或延时，发送端重传。<br>2.慢启动：服务器发送数据包，当然越快越好，最好一次性全发出去。但是，发得太快，就有可能丢包。带宽小、路由器过热、缓存溢出等许多因素都会导致丢包。线路不好的话，发得越快，丢得越多。因此TCP协议设置了慢启动机制，开始的时候，发送得较慢，然后根据丢包的情况，调整速率：如果不丢包，就加快发送速度；如果丢包，就降低发送速度。<br>3.ACK检验：TCP协议规定接收方每接收两个数据包发送一个确认信息，确认信息成为ACK，ACK携带下一个数据包的编号    和接收方接收窗口的剩余容量，根据ACK和编号，可以推测接收速率，调整发送速度。<br>4.数据包遗失处理：这也和ACK有关，每一个数据包都带有下一个数据包的编号。如果下一个数据包没有收到，那么 ACK 的编号就不会发生变化，因此就会不断返回相同的ACK，当收到三个相同的ACK时，就会确认丢包，从而再次发送。</p><h2 id="IP协议（网际协议）"><a href="#IP协议（网际协议）" class="headerlink" title="IP协议（网际协议）"></a>IP协议（网际协议）</h2><p>简要介绍一下IP协议：</p><p>IP 协议定义了一套自己的地址规则，称为 IP 地址。它实现了路由功能，允许某个局域网的 A 主机，向另一个局域网的 B 主机发送消息。</p><p>也就是说：IP协议是一个地址协议，数据在互联网上的传输过程是由IP协议完成的，即上文所说的在TCP数据包前加上IP报头。IP报头中含有版本、源IP、目的IP、存活时间等信息，系统通过处理这些信息控制传输过程。</p><p>由于TCP协议负责数据管控，IP协议负责传输，是传输过程的核心部分，因此整个传输过程通常成为TCP/IP协议。</p><h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><p>说到TCP协议，就不得不提到UDP协议：</p><p>UDP（User Data Protocol，用户数据报协议）是一个简单的面向数据报的通信协议，提供数据的不可靠传递。</p><p>相比于TCP协议，UDP协议没有握手过程，起步快延迟小，没有重传机制，相比于TCP协议来说是“不可靠”的。</p><p>但同时UDP协议有带宽利用小，传输速度快等优势，相比TCP，UDP在网络传输中同样有着不可替代的优势。</p><p>实际工作中，往往根据需要选用不同的协议。</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>计算机基础知识</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>二叉树的创建和遍历</title>
     <link href="/2020/03/31/bin-tree1/"/>
     <url>/2020/03/31/bin-tree1/</url>
@@ -265,7 +284,7 @@
     
     <categories>
       
-      <category>CTF题目浮现</category>
+      <category>CTF题目复现</category>
       
     </categories>
     
@@ -287,7 +306,7 @@
     <link href="/2020/03/09/myself/"/>
     <url>/2020/03/09/myself/</url>
     
-    <content type="html"><![CDATA[<blockquote><p>这是我的新博客，之前的博客因为一直没更就放弃了，这次希望能坚持做下去</p></blockquote><h2 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h2><p>一名末流985学校的菜鸡，计算机专业学生，软件开发爱好者，信息安全爱好者，重点方向是逆向工程。</p><h2 id="准备写点什么"><a href="#准备写点什么" class="headerlink" title="准备写点什么"></a>准备写点什么</h2><p>程序开发、算法、CTF、以及一些奇怪的东西。</p><h2 id="近期计划"><a href="#近期计划" class="headerlink" title="近期计划"></a>近期计划</h2><p>准备先移植一下之前在各平台发的文章之类的，会不定期更一些数据结构和信息安全内容。</p><h2 id="单人博客？"><a href="#单人博客？" class="headerlink" title="单人博客？"></a>单人博客？</h2><p>会考虑让几个有想法的同学加入进来，做出一个优秀的IT博客，目前欢迎网络、软件开发、二进制、数学爱好者加入。</p><h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>我的邮箱：<a href="mailto:dyn201885095@gmail.com">dyn201885095@gmail.com</a></p><h2 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h2><p>fun in everything</p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>This is my new blog. I gave up my previous blog because it has not been updated. I hope I can stick to it this time.</p></blockquote><h2 id="profile"><a href="#profile" class="headerlink" title="profile"></a>profile</h2><p>name: Dingyn</p><p>major: cs</p><p>age: 20</p><p>description: A man enjoying programming and CTF, leader of team pr3p4r3d.</p><h2 id="Going-to-write-about"><a href="#Going-to-write-about" class="headerlink" title="Going to write about"></a>Going to write about</h2><p>Program development, algorithms, CTF, and some weird stuff.</p><h2 id="Recent-plan"><a href="#Recent-plan" class="headerlink" title="Recent plan"></a>Recent plan</h2><p>Be prepared to port the previous articles posted on various platforms, and update some data structures and information security contents from time to time.</p><h2 id="E-mail"><a href="#E-mail" class="headerlink" title="E-mail"></a>E-mail</h2><p><a href="mailto:dyn201885095@gmail.com">dyn201885095@gmail.com</a></p><h2 id="future"><a href="#future" class="headerlink" title="future"></a>future</h2><p>fun is everything</p>]]></content>
     
     
     
