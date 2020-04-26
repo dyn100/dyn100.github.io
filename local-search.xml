@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>安恒4月月赛部分题解</title>
+    <link href="/2020/04/26/anheng-2020-4/"/>
+    <url>/2020/04/26/anheng-2020-4/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>本次安恒月赛，作者完成了三道题，主项的两个re全部完成，其他题目MISC提交一道，crypto尝试一道没能完成。（因为作者个人事务，本次月赛作者只玩了一个小时，如果之后有补充的逆向题，那只能感到很遗憾）</p></blockquote><blockquote><p>果然比赛结束前两小时又放了一道逆向题，不过我在赛后也用不到两个小时的时间完成了这个re，现在把这个re也加进来。</p></blockquote><h2 id="REVERSE"><a href="#REVERSE" class="headerlink" title="REVERSE"></a>REVERSE</h2><blockquote><p>本次月赛的逆向题比较简单，没用多长时间就完成了两个逆向题。</p></blockquote><h3 id="入门reverse"><a href="#入门reverse" class="headerlink" title="入门reverse"></a>入门reverse</h3><p>ida静态分析，明显的对字符串-1并异或6即可得出flag</p><h3 id="简单的加密3"><a href="#简单的加密3" class="headerlink" title="简单的加密3"></a>简单的加密3</h3><p>刚开始看的时候有点没反应过来，看到要求输入长度&gt;=9的时候发现了输入的数字会覆盖掉部分变量，那么想到如果不覆盖变量就可以得到flag，同时，发现每个字符的异或是相同的，因此我们可以猜测或者爆破这个数字：</p><p>当然了，像我这么懒的肯定是先猜一猜，考虑到flag或DAS开头，因此我猜测了这个数字：64^38=’f’,因此这个数字是64：</p><p>很幸运，我猜对了，下面是脚本：</p><pre><code class="python">a=[38,44,33,39,59,35,34,115,117,114,113,33,36,117,118,119,35,120,38,114,117,113,38,34,113,114,117,114,36,112,115,118,121,112,35,37,121,61]str=&quot;&quot;for i in a:    str=str+chr(64^i)    print(str)# flag{cb3521ad567c8f251fb1252d03690ce9}</code></pre><h3 id="sm"><a href="#sm" class="headerlink" title="sm"></a>sm</h3><p>一道加密题，这道题显示了我crypto之前两个月白学了，看到sm只知道是加密，不知道是什么样式的。静态分析，看到32位的key，把key查了一下，发现很可能是sm4加密，加密函数的构造也证实了这种可能。</p><p>sm4解密有个python库十分好用，在此推荐一波：[<a href="https://github.com/yang3yen/pysm4]" target="_blank" rel="noopener">https://github.com/yang3yen/pysm4]</a></p><p>所以脚本如下：</p><pre><code class="python">from pysm4 import encrypt,decryptmk=0x0123456789abcdeffedcba9876543210cipher=0xc079776677e5ac9931c567eb470645a7print(hex(decrypt(cipher,mk)))a=[0xd0389046,0xc236e4c6,0x6bd78795,0x9f5c6e66]for i in a:    print(i)#flag{d0389046c236e4c66bd787959f5c6e66}</code></pre><h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><blockquote><p>然后看了一会其他项目的题，感受一下自己的无知，然后发现自己还是能做出签到题的</p></blockquote><h3 id="MISC：6G还远吗"><a href="#MISC：6G还远吗" class="headerlink" title="MISC：6G还远吗"></a>MISC：6G还远吗</h3><p>下载一个文件，下载速度非常慢，但是不重要，打开没完成下载的文件就能看到flag。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题目复现</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>Re</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>简单了解TCP协议</title>
     <link href="/2020/04/14/TCP/"/>
     <url>/2020/04/14/TCP/</url>
