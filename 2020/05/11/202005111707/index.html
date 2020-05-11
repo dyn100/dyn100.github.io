@@ -16,7 +16,7 @@
   <meta name="description" content="a boy enjoying the world">
   <meta name="author" content="Magic Ding">
   <meta name="keywords" content="">
-  <title>安恒4月月赛部分题解 - unkn0wn</title>
+  <title>网鼎杯2020 re - unkn0wn</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
@@ -131,7 +131,7 @@
               
                 <p class="mt-3 post-meta">
                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                  星期日, 四月 26日 2020, 10:02 上午
+                  星期一, 五月 11日 2020, 5:09 下午
                 </p>
               
 
@@ -140,7 +140,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    599 字
+                    982 字
                   </span>
                 
 
@@ -148,7 +148,7 @@
                   
                   <span class="post-meta">
                       <i class="far fa-clock"></i>
-                      2 分钟
+                      4 分钟
                   </span>
                 
 
@@ -183,48 +183,105 @@
           <div class="post-content mx-auto" id="post">
             
               <p
-                class="note note-warning">本文最后更新于：星期四, 四月 30日 2020, 1:36 下午</p>
+                class="note note-warning">本文最后更新于：星期一, 五月 11日 2020, 5:10 下午</p>
             
             <div class="markdown-body">
               <blockquote>
-<p>本次安恒月赛，作者完成了三道题，主项的两个re全部完成，其他题目MISC提交一道，crypto尝试一道没能完成。（因为作者个人事务，本次月赛作者只玩了一个小时，如果之后有补充的逆向题，那只能感到很遗憾）</p>
+<p>这次的网鼎杯，四道re做出了两个windows的，android的脱壳弄了好久运行环境没搞定（对安卓逆向不熟悉，以后得多学一点安卓）,至于那个全场0 solve的android我根本就没想。</p>
 </blockquote>
-<blockquote>
-<p>果然比赛结束前两小时又放了一道逆向题，不过我在赛后也用不到两个小时的时间完成了这个re，现在把这个re也加进来。</p>
+<h2 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h2><p>假虚拟机逆向，手动走流程就可以走到最后</p>
+<h3 id="流程分析"><a href="#流程分析" class="headerlink" title="流程分析"></a>流程分析</h3><p>查壳，32bit，PE，无壳</p>
+<p>传入一个114长度的数组，用switch进行一段处理，通过ida查看伪码，我们很容易分析出，先是输入一串字符串，每执行到8是对输入的字符串进行处理，每执行到1是给一个验证数组元素赋值，执行到7是比对验证数组，当全部比对正确时，可以写出flag脚本。</p>
+<h3 id="求解思路"><a href="#求解思路" class="headerlink" title="求解思路"></a>求解思路</h3><p>了解流程后，我们开始逆向这个过程，题目中有几个位置是FFFFFF8A等数值，不是很了解，通过手动patch得出最终结果。</p>
+<p>flag{757515121f3d478}</p>
+<h2 id="bang（未解出）"><a href="#bang（未解出）" class="headerlink" title="bang（未解出）"></a>bang（未解出）</h2><blockquote>
+<p>比赛期间弄环境是大忌，这次的失误也警示自己要学习一下android。</p>
 </blockquote>
-<h2 id="REVERSE"><a href="#REVERSE" class="headerlink" title="REVERSE"></a>REVERSE</h2><blockquote>
-<p>本次月赛的逆向题比较简单，没用多长时间就完成了两个逆向题。</p>
+<p>很遗憾，这道几乎是签到题的题目由于我对android完全不了解而没能做出。</p>
+<p>赛后通过fart完成脱壳，核心代码：</p>
+<pre><code class="java">public void onClick(View paramAnonymousView)
+      {
+        String str = localEditText.getText().toString();
+        paramAnonymousView = paramBundle.getText().toString();
+        if (str.equals(paramAnonymousView))
+        {
+          MainActivity.showmsg(&quot;user is equal passwd&quot;);
+        }
+        else if ((str.equals(&quot;admin&quot;) &amp; paramAnonymousView.equals(&quot;pass71487&quot;)))
+        {
+          MainActivity.showmsg(&quot;success&quot;);
+          MainActivity.showmsg(&quot;flag is flag{borring_things}&quot;);
+        }
+        else
+        {
+          MainActivity.showmsg(&quot;wrong&quot;);
+        }</code></pre>
+<p> flag{borring_things}</p>
+<h2 id="jocker"><a href="#jocker" class="headerlink" title="jocker"></a>jocker</h2><blockquote>
+<p>很难理解出题人最后让猜一步的心态。</p>
 </blockquote>
-<h3 id="入门reverse"><a href="#入门reverse" class="headerlink" title="入门reverse"></a>入门reverse</h3><p>ida静态分析，明显的对字符串-1并异或6即可得出flag</p>
-<h3 id="简单的加密3"><a href="#简单的加密3" class="headerlink" title="简单的加密3"></a>简单的加密3</h3><p>刚开始看的时候有点没反应过来，看到要求输入长度&gt;=9的时候发现了输入的数字会覆盖掉部分变量，那么想到如果不覆盖变量就可以得到flag，同时，发现每个字符的异或是相同的，因此我们可以猜测或者爆破这个数字：</p>
-<p>当然了，像我这么懒的肯定是先猜一猜，考虑到flag或DAS开头，因此我猜测了这个数字：64^38=’f’,因此这个数字是64：</p>
-<p>很幸运，我猜对了，下面是脚本：</p>
-<pre><code class="python">a=[38,44,33,39,59,35,34,115,117,114,113,33,36,117,118,119,35,120,38,114,117,113,38,34,113,114,117,114,36,112,115,118,121,112,35,37,121,61]
+<p>代码中有混淆和栈平衡破坏，不会改，但是也可以看到大部分流程</p>
+<h3 id="程序流程"><a href="#程序流程" class="headerlink" title="程序流程"></a>程序流程</h3><p>首先输入flag，wrong函数对flag按奇偶位进行异或，减处理</p>
+<p>omg函数，将变换后的函数和unk_4030C0进行比较，解出flag{fak3_alw35_sp_me!!}</p>
+<pre><code class="python">a=[
+  102, 107, 99, 100,  127, 
+   97, 103,  100,  59, 86,
+  107,   97, 123,  38,   59, 
+   80, 99,  95,  77,  90,  
+  113,   12, 55,102
+]
 
 str=&quot;&quot;
+for i in range(0,12):
+    a[i*2]=a[i*2]^(i*2)
+    a[i*2+1]=a[i*2+1]+i*2+1
+    str=str+chr(a[i*2])+chr(a[i*2+1])
+print(a)
 
-for i in a:
 
-    str=str+chr(64^i)
+print(str)</code></pre>
+<p>接下来开始动态调试encrypt函数，发现字符串与hahahaha_do_you_find_me?的前19位进行异或</p>
+<pre><code class="python">str=[&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;h&#39;,&#39;a&#39;,&#39;_&#39;,&#39;d&#39;,&#39;o&#39;,&#39;_&#39;,&#39;y&#39;,&#39;o&#39;,&#39;u&#39;,&#39;_&#39;,&#39;f&#39;,&#39;i&#39;,&#39;n&#39;,&#39;d&#39;,&#39;_&#39;,&#39;m&#39;,&#39;e&#39;,&#39;?&#39;]
 
-    print(str)
-# flag{cb3521ad567c8f251fb1252d03690ce9}
-</code></pre>
-<h3 id="sm"><a href="#sm" class="headerlink" title="sm"></a>sm</h3><p>一道加密题，这道题显示了我crypto之前两个月白学了，看到sm只知道是加密，不知道是什么样式的。静态分析，看到32位的key，把key查了一下，发现很可能是sm4加密，加密函数的构造也证实了这种可能。</p>
-<p>sm4解密有个python库十分好用，在此推荐一波：[<a href="https://github.com/yang3yen/pysm4]" target="_blank" rel="noopener">https://github.com/yang3yen/pysm4]</a></p>
-<p>所以脚本如下：</p>
-<pre><code class="python">from pysm4 import encrypt,decrypt
-mk=0x0123456789abcdeffedcba9876543210
-cipher=0xc079776677e5ac9931c567eb470645a7
-print(hex(decrypt(cipher,mk)))
-a=[0xd0389046,0xc236e4c6,0x6bd78795,0x9f5c6e66]
-for i in a:
-    print(i)
-#flag{d0389046c236e4c66bd787959f5c6e66}</code></pre>
-<h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><blockquote>
-<p>然后看了一会其他项目的题，感受一下自己的无知，然后发现自己还是能做出签到题的</p>
+a=[ 0x0000000E, 0x0000000D, 0x00000009, 0x00000006, 0x00000013, 0x00000005, 0x00000058,
+0x00000056, 0x0000003E, 0x00000006, 0x0000000C, 0x0000003C, 0x0000001F, 0x00000057, 0x00000014,
+0x0000006B, 0x00000057, 0x00000059, 0x0000000D]
+ans=&quot;&quot;
+for i in range(0,len(a)):
+    str[i]=chr(ord(str[i])^a[i])
+    ans=ans+str[i]
+print(ans)</code></pre>
+<p>得到flag{d07abccf8a410c，还剩下最后五位，随便把五位填上重新调试程序</p>
+<p>查看finally函数，没发现什么验证和处理，但是看到了定义了五个数值，而且flag第一位就过不去检测！所以爆破不存在的。做题的时候就觉得这五个数是不会凭空出现的，于是尝试最后一个数值和’}’异或，得出的数值分别异或之前的几个数值，得出猜测的flag，correct！</p>
+<p>flag{d07abccf8a410cb37a}</p>
+<hr>
+<blockquote>
+<p>还有个不是re的也顺便写一下吧</p>
 </blockquote>
-<h3 id="MISC：6G还远吗"><a href="#MISC：6G还远吗" class="headerlink" title="MISC：6G还远吗"></a>MISC：6G还远吗</h3><p>下载一个文件，下载速度非常慢，但是不重要，打开没完成下载的文件就能看到flag。</p>
+<h2 id="boom（crypto）"><a href="#boom（crypto）" class="headerlink" title="boom（crypto）"></a>boom（crypto）</h2><blockquote>
+<p>全场最简单的一道题，完全是送分</p>
+</blockquote>
+<p>一个程序，首先是MD5解密，在线找就行</p>
+<p>然后解一个三元一次方程组，懒人是不会自己解方程的，z3库终于用上了。</p>
+<pre><code class="python">from z3 import *
+
+s=Solver()
+
+a1=[0]*3
+
+for i in range(3):
+    a1[i]=Int(&#39;a1[&#39;+str(i)+&#39;]&#39;)
+
+s.add(3*a1[0]-a1[1]+a1[2]==185)
+s.add(2*a1[0]+3*a1[1]-a1[2]==321) 
+s.add(a1[0]+a1[1]+a1[2]==173)
+
+s.check()
+
+print(s.model())</code></pre>
+<p>最后解一元二次方程，求根公式就可以</p>
+<p>flag格式不了解（这个是我脑残了，拿cmd运行就可以了），用ida看了下格式</p>
+<p>flag{en5oy_746831_89127561}</p>
 
             </div>
             <hr>
@@ -469,7 +526,7 @@ for i in a:
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "安恒4月月赛部分题解&nbsp;",
+        "网鼎杯2020 re&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

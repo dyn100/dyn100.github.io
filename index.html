@@ -156,6 +156,269 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/05/11/202005111717/">
+        <p class="h4 index-header">pwn入门（1）basicROP</p>
+      </a>
+
+      <a href="/2020/05/11/202005111717/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+萌新开始了自己的pwn学习（感觉团队进步速度不够，准备带头拓展一下业务）接下来一段时间我将会抽出时间学习pwn，首先按照ctf wiki完成知识学习。
+
+基本知识栈溢出栈溢出(stack overflow)指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。
+发生栈溢出的前提：
+
+程序必须向栈上写入数据。
+写入的数据大小没有被良好地控制。
+
+危险函数输入函数：gets,scanf,vscanf
+输出函数：sprintf
+字符串：strcpy，strcat，bcopy
+确定填充长度确定变量到栈底的距离
+
+下面，我们用几个例子入门rop</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-05-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/pwn%E5%AD%A6%E4%B9%A0/">pwn学习</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/pwn/">pwn</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/05/11/202005111715/">
+        <p class="h4 index-header">crypto入门 buuctf刷题记录（1）</p>
+      </a>
+
+      <a href="/2020/05/11/202005111715/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+有大佬给我推荐了buuctf平台，去平台学习，记录一些有意思的。
+
+rabbit题目地址
+一种叫做rabbit的流密码，本题在线解密即可。
+密码学的心声题目地址
+看到了一个曲谱,由于所有数字都小于8，考虑八进制组合，3个一组，得出flag
+佛说：只能四天题目地址
+根据题目描述，首先判断出是新与佛论禅
+得出一堆富强民主文明和谐，猜测是核心价值观加密
+得到一串字母和doyouknowfence
+栅栏密码，推到4时发现doyouknowcaesar
+凯撒的本意是移位3，所以得出一串字母
+字母由大写的26个字母和2-7组成，很可能是base32
+得出flag
+2018CISCN oldstreami</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-05-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/crypto/">crypto</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/05/11/202005111714/">
+        <p class="h4 index-header">GUET-ctf2019 re</p>
+      </a>
+
+      <a href="/2020/05/11/202005111714/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">题目描述无，题目地址
+过程分析
+这道题本身没太大难度，记录这道题的目的是记录一下之前提到的z3库的使用
+
+脱掉upx壳，直接解密就可以，用一下z3库提高效率：
+from z3 import *
+s = Solver()
+a1 = [0]*32
+for i in range(32):
+    a1[i] = Int(&#39;a1[&#39;+str(i)+&#39;]&#39;)
+
+s.add( 1629056 * a1[0] == 166163712 )
+s.add( 6771600 * a1[1] == 731332800 )
+s.add( 3682944 * a1[2] == 35724</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-05-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/Re/">Re</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/05/11/202005111707/">
+        <p class="h4 index-header">网鼎杯2020 re</p>
+      </a>
+
+      <a href="/2020/05/11/202005111707/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+这次的网鼎杯，四道re做出了两个windows的，android的脱壳弄了好久运行环境没搞定（对安卓逆向不熟悉，以后得多学一点安卓）,至于那个全场0 solve的android我根本就没想。
+
+signal假虚拟机逆向，手动走流程就可以走到最后
+流程分析查壳，32bit，PE，无壳
+传入一个114长度的数组，用switch进行一段处理，通过ida查看伪码，我们很容易分析出，先是输入一串字符串，每执行到8是对输入的字符串进行处理，每执行到1是给一个验证数组元素赋值，执行到7是比对验证数组，当全部比对正确时，可以写出flag脚本。
+求解思路了解流程后，我们开始逆向这个过程，题目中有几个位置是FF</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-05-11&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/CTF%E6%AF%94%E8%B5%9Bwp/">CTF比赛wp</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/Re/">Re</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2020/04/30/202004301334/">
+        <p class="h4 index-header">buuctf密码学入门</p>
+      </a>
+
+      <a href="/2020/04/30/202004301334/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">
+有大佬给我推荐了buuctf平台，去平台玩一玩，记录一些有意思的。
+
+rabbit题目地址
+一种叫做rabbit的流密码，本题在线解密即可。
+密码学的心声题目地址
+看到了一个曲谱,由于所有数字都小于8，考虑八进制组合，3个一组，得出flag
+佛说：只能四天题目地址
+根据题目描述，首先判断出是新与佛论禅
+得出一堆富强民主文明和谐，猜测是核心价值观加密
+得到一串字母和doyouknowfence
+栅栏密码，推到4时发现doyouknowcaesar
+凯撒的本意是移位3，所以得出一串字母
+字母由大写的26个字母和2-7组成，很可能是base32
+得出flag
+2018CISCN oldstream</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2020-04-30&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
+          
+            <a href="/tags/crypto/">crypto</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2020/04/26/anheng-2020-4/">
         <p class="h4 index-header">安恒4月月赛部分题解</p>
       </a>
@@ -187,7 +450,7 @@ REVERSE
         
           <i class="iconfont icon-inbox"></i>
           
-            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
+            <a href="/categories/CTF%E6%AF%94%E8%B5%9Bwp/">CTF比赛wp</a>&nbsp;
           &nbsp;
         
         
@@ -395,248 +658,6 @@ void create(linklist &amp;p) {
           <i class="iconfont icon-tag"></i>
           
             <a href="/tags/C/">C++</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/12/the-maya-society/">
-        <p class="h4 index-header">Hack.lu-2017 The_Maya_Society题解</p>
-      </a>
-
-      <a href="/2020/03/12/the-maya-society/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-在逆向面前，dyn无时无刻都在感受自己的渺小。。。
-
-题目地址：https://adworld.xctf.org.cn/media/task/attachments/17574fc423474b93a0e6e6a6e583e003.zip
-题目描述：无
-前言拿到这道题之后，看到html文件和launcher程序，当时没明白html文件的作用，做完之后怀疑是下载launcher程序用的。
-
-查壳将程序导入peid，经查，无壳，elf文件，64bit
-分析老规矩，用gdb-pwndbg和ida进行联合调试
-静态分析
-恕在下孤陋寡闻，静态分析相比于很多大神的思路差的太远，不过还是看到了一些有用的东</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-12&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/CTF%E9%A2%98%E7%9B%AE%E5%A4%8D%E7%8E%B0/">CTF题目复现</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
-          
-            <a href="/tags/Re/">Re</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/11/linklist3/">
-        <p class="h4 index-header">线性表练习整理</p>
-      </a>
-
-      <a href="/2020/03/11/linklist3/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-这是上周老师布置的线性表和链表的一些习题，现在把代码粘在这里从本期开始，鄙人将开始完全放飞自我，不会吝啬任何标准库C++语句（保证数据结构为C语言结构以及设计思想仍为面向过程）
-
-顺序表question1 插入
-
-tips：为了加快遍历速度。采用了二分查找
-
-#include&lt;iostream&gt;
-using namespace std;
-
-int search(int n,int x,int *p) //二分查找，确定插入位置 
-{
-    int l=0,r=n-1,mid=(l+r)/2;
-    if(p[r]&lt;x)
-        return r+1; 
-    </div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-11&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/C/">C++</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/10/ask/">
-        <p class="h4 index-header">(转载)提问的智慧</p>
-      </a>
-
-      <a href="/2020/03/10/ask/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-转载这篇文章，警戒自己和他人
-
-提问的智慧
-How To Ask Questions The Smart Way
-Copyright © 2001,2006,2014 Eric S. Raymond, Rick Moen
-本指南英文版版权为 Eric S. Raymond, Rick Moen 所有。
-原文网址：http://www.catb.org/~esr/faqs/smart-questions.html
-Copyleft 2001 by D.H.Grand(nOBODY/Ginux), 2010 by Gasolin, 2015 by Ryan Wu
-本中文指南是基于原文 3.10 </div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
-        
-        
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/10/dig2/">
-        <p class="h4 index-header">ms08_067经典漏洞复现</p>
-      </a>
-
-      <a href="/2020/03/10/dig2/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-不要理会下面那句虎狼之词，继续搬运
-
-
-我竟然把这个坑填下去了，可喜可贺。(填下去个锤子！from半年后的自己)
-
-一切的开始
-刑法第二百八十六条违反国家规定，对计算机信息系统功能进行删除、修改、增加、干扰，造成计算机信息系统不能正常运行，后果严重的，处五年以下有期徒刑或者拘役;后果特别严重的，处五年以上有期徒刑。违反国家规定，对计算机信息系统中存储、处理或者传输的数据和应用程序进行删除、修改、增加的操作，后果严重的，依照前款的规定处罚。故意制作、传播计算机病毒等破坏性程序，影响计算机系统正常运行，后果严重的，依照第一款的规定处罚。
-
-一定要清楚，我们做的是安全，一切的目的是更好的保护自己和</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E6%B8%97%E9%80%8F%E6%94%BB%E5%87%BB%E5%AE%9E%E6%88%98/">渗透攻击实战</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
-          
-            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>&nbsp;
-          
-            <a href="/tags/kali/">kali</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2020/03/10/dig1/">
-        <p class="h4 index-header">搭建kali攻击机及windows远程连接（科普向）</p>
-      </a>
-
-      <a href="/2020/03/10/dig1/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">
-继续移植之前的存货
-
-
-想开个漏洞攻击的坑，不知道能不能填上。（这句话tmd是我半年前写的,然后一共没更几期）
-
-简介漏洞利用（英语：Exploit，本意为“利用”）是计算机安全术语，指的是利用程序中的某些漏洞，来得到计算机的控制权（使自己编写的代码越过具有漏洞的程序的限制，从而获得运行权限）。在英语中，本词也是名词，表示为了利用漏洞而编写的攻击程序，即漏洞利用程序（维基百科）
-通俗的说，就是我们利用程序的漏洞控制程序的过程。（沃.兹及硕德）
-攻击机搭建我们使用kali linux作为攻击机，kali是基于debian的linux发行版，载有很多渗透测试和攻击程序，是一个很牛逼的攻击平台。
-</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2020-03-10&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/%E7%A7%91%E6%99%AE%E5%90%91%E4%BD%9C%E5%93%81%E9%9B%86/">科普向作品集</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a>&nbsp;
-          
-            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a>&nbsp;
-          
-            <a href="/tags/kali/">kali</a>&nbsp;
           
         
       </div>
