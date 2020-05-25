@@ -210,31 +210,6 @@
   
   
   <entry>
-    <title>二叉树的创建和遍历</title>
-    <link href="/2020/03/31/bin-tree1/"/>
-    <url>/2020/03/31/bin-tree1/</url>
-    
-    <content type="html"><![CDATA[<blockquote><p>套路，都是套路</p></blockquote><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>在计算机科学中，二叉树（英语：Binary tree）是每个节点最多只有两个分支（即不存在分支度大于2的节点）的树结构。通常分支被称作“左子树”或“右子树”。二叉树的分支具有左右次序，不能随意颠倒</p><blockquote><p>关于书上的那些性质和定义我就不写了，书上说的比我好多了。</p></blockquote><h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>二叉树由数据，左子树，右子树组成，在C++中，通常用如下表示：</p><pre><code class="C++">typedef struct node {    node* lf; //左子树    node* rt; //右子树    int data; //数据}ndoe ,*bin_tree;</code></pre><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>我们通常使用先根序创建一个二叉树</p><pre><code class="C++">void create(bin_tree&amp; a) {    int p;    cin&gt;&gt;p;    if (p == -1) {        a = NULL;    }    else {        a = new node;        a-&gt;data = p;        create(a-&gt;lf);        create(a-&gt;rt);    }}</code></pre><h2 id="四种遍历"><a href="#四种遍历" class="headerlink" title="四种遍历"></a>四种遍历</h2><p>我们常用的二叉树遍历方法有四种，先序，中序，后序和循环</p><p>我们来看一下先序中序和后序的递归表示</p><blockquote><p>循环遍历在之后的练习中有，因此不整理在这里了</p></blockquote><pre><code class="C++">//先序遍历，把顺序换一下有别样体验（中序，后序）void xxbl(bin_tree&amp; a) {    if (a) {        cout &lt;&lt; a-&gt;data;        xxbl(a-&gt;lf);        xxbl(a-&gt;rt);    }}//中序 void zxbl(bin_tree&amp; a) {    if (a) {        xxbl(a-&gt;lf);        cout &lt;&lt; a-&gt;data;        xxbl(a-&gt;rt);    }}//后序 void hxbl(bin_tree&amp; a) {    if (a) {        xxbl(a-&gt;lf);        xxbl(a-&gt;rt);        cout &lt;&lt; a-&gt;data;    }}</code></pre><h3 id="非递归"><a href="#非递归" class="headerlink" title="非递归"></a>非递归</h3><p>递归表示非常简单易懂，但是递归运算在运行很多层之后效率就会很低，为解决此问题，我们需要认识非递归的遍历方法，这里写一个前序非递归。</p><p>简单说一下思路，先用一个栈存储所有的左子树结点，然后抛出结点，并进入右结点，再次存储左结点，可以看出，这一思路可以代表根，左，右的先序思想。</p><pre><code class="C++">void preOrder(bin_tree &amp;root)     //非递归前序遍历 {    stack&lt;bin_tree&gt; s;    bin_tree p = root;    while (p != NULL || !s.empty())    {        while (p != NULL)        {            cout &lt;&lt; p-&gt;data &lt;&lt; &quot;&quot;;            s.push(p);            p = p-&gt;lf;        }        if (!s.empty())        {            p = s.top();            s.pop();            p = p-&gt;rt;        }    }}</code></pre>]]></content>
-    
-    
-    <categories>
-      
-      <category>数据结构与算法</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>C++</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>windows下提权实验</title>
     <link href="/2020/03/29/dig3/"/>
     <url>/2020/03/29/dig3/</url>
@@ -264,31 +239,6 @@
   
   
   <entry>
-    <title>关于链表的一些小练习</title>
-    <link href="/2020/03/21/linklist4/"/>
-    <url>/2020/03/21/linklist4/</url>
-    
-    <content type="html"><![CDATA[<blockquote><p>关于链表的一个设计练习</p></blockquote><p><a href="https://imgchr.com/i/8HVEi6" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/23/8HVEi6.md.png" srcset="/img/loading.gif" alt="8HVEi6.png" border="0" /></a></p><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;   // 系数    int data2;  // 指数    node* next;}node, * linklist;void create(linklist &amp;p) {    p = new node;    int len,num,num2,rec;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data（依次输入系数和指数）&quot; &lt;&lt; endl; // 依次输入系数 指数    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num&gt;&gt;num2;//输入数据        if (i != 0) {            if (rec &gt; num2) {                cout &lt;&lt; &quot;invalid,创建失败&quot; &lt;&lt; endl;                return;            }        }        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;data2 = num2;        rec = num2;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }}void print(linklist&amp; p) {    linklist tmp = p;    while (tmp-&gt;next != NULL)    {        tmp = tmp-&gt;next;        cout &lt;&lt; tmp-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp-&gt;data2 &lt;&lt; endl;    }}linklist reverse(linklist&amp; t) {    cout &lt;&lt; &quot;逆置完成请重新创建链表&quot; &lt;&lt; endl;    linklist tmp1, tmp2,tmp3;    tmp1 = t;    tmp2 = t-&gt;next;    if (t-&gt;next-&gt;next != NULL) {        tmp3 = t-&gt;next-&gt;next;    }    else {        tmp1-&gt;next = NULL;        tmp2-&gt;next = tmp1;        t = tmp2;        linklist tmp4 = t;        while (tmp4-&gt;next != NULL)        {            cout &lt;&lt; tmp4-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp4-&gt;data2 &lt;&lt; endl;            tmp4 = tmp4-&gt;next;        }        return t;    }    tmp1-&gt;next = NULL;    while (tmp3 != NULL) {        tmp2-&gt;next = tmp1;        tmp1 = tmp2;        tmp2 = tmp3;        tmp3 = tmp3-&gt;next;    }    tmp2-&gt;next = tmp1;    t = tmp2;    linklist tmp4 = t;    while (tmp4-&gt;next != NULL)    {        cout &lt;&lt; tmp4-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp4-&gt;data2 &lt;&lt; endl;        tmp4 = tmp4-&gt;next;    }    return t;}linklist deri(linklist &amp;p) {    linklist tmp = p;    linklist tmp2=new node;    linklist tmp4 = tmp2;    while (tmp-&gt;next != NULL) {        tmp = tmp-&gt;next;        if (tmp-&gt;data2 == 0) {            linklist tmp3 = new node;            tmp3-&gt;data = 0;            tmp3-&gt;data2 = 0;            tmp3-&gt;next = NULL;            tmp4-&gt;next = tmp3;            tmp4 = tmp4-&gt;next;        }        else {            linklist tmp3 = new node;            tmp3-&gt;data = tmp-&gt;data*tmp-&gt;data2;            tmp3-&gt;data2 = tmp-&gt;data2-1;            tmp3-&gt;next = NULL;            tmp4-&gt;next = tmp3;            tmp4 = tmp4-&gt;next;        }    }    print(tmp2);    return tmp2;} void sum(linklist&amp; p, linklist&amp; p2) {     linklist tmp, tmp2;     tmp = p;     tmp2 = p2-&gt;next;     while (tmp-&gt;next != NULL &amp;&amp; tmp2 != NULL) {         if (tmp2-&gt;data2 &lt; tmp-&gt;next-&gt;data2) {             linklist tmp3 = tmp2;             tmp2 = tmp2-&gt;next;             tmp3-&gt;next = tmp-&gt;next;             tmp-&gt;next = tmp3;             tmp = tmp-&gt;next;         }         else if (tmp2-&gt;data2 == tmp-&gt;next-&gt;data2) {             tmp-&gt;next-&gt;data = tmp-&gt;next-&gt;data + tmp2-&gt;data;             tmp2 = tmp2-&gt;next;         }         else {             tmp = tmp-&gt;next;         }     }     if (tmp2 != NULL) {         tmp-&gt;next = tmp2;     }}void del(linklist&amp; p, linklist&amp; a, linklist&amp; b){    linklist tmp1, tmp2, tmp3;    tmp1 = p;    tmp2 = a-&gt;next;    tmp3 = b-&gt;next;    while (tmp1-&gt;next != NULL &amp;&amp; tmp2 != NULL &amp;&amp; tmp3 != NULL) {        if (tmp2-&gt;data == tmp3-&gt;data) {            if (tmp2-&gt;data == tmp1-&gt;next-&gt;data) {                tmp1-&gt;next = tmp1-&gt;next-&gt;next;            }            else if (tmp2-&gt;data &lt; tmp1-&gt;next-&gt;data) {                tmp2 = tmp2-&gt;next;                continue;            }            else {                tmp1 = tmp1-&gt;next;            }        }        else if (tmp2-&gt;data &lt; tmp3-&gt;data) {            tmp2 = tmp2-&gt;next;        }        else {            tmp3 = tmp3-&gt;next;        }    }}void main() {    linklist p;    int i;    while (1) {        cout &lt;&lt; &quot;选择（请先创建链表）&quot; &lt;&lt; endl;        cout &lt;&lt; &quot;0 创建 1 输出 2 逆置 3 导数 4 求和 5 删除&quot; &lt;&lt; endl;        cin &gt;&gt; i;        switch (i){        case 0: //创建一个指数递增的链表            create(p);            continue;        case 1: //输出多项式            print(p);            continue;        case 2: //就地逆置            reverse(p);            continue;        case 3: //求导            deri(p);            continue;        case 4: //求和            linklist q;            create(q);            sum(p, q);            continue;        case 5: //删除，以data为标志            linklist a, b;            create(a);            create(b);            del(p, a, b);            continue;        }    }}</code></pre>]]></content>
-    
-    
-    <categories>
-      
-      <category>数据结构与算法</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>C++</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Hack.lu-2017 The_Maya_Society题解</title>
     <link href="/2020/03/12/the-maya-society/"/>
     <url>/2020/03/12/the-maya-society/</url>
@@ -308,31 +258,6 @@
       <tag>信息安全</tag>
       
       <tag>Re</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>线性表练习整理</title>
-    <link href="/2020/03/11/linklist3/"/>
-    <url>/2020/03/11/linklist3/</url>
-    
-    <content type="html"><![CDATA[<blockquote><p>这是上周老师布置的线性表和链表的一些习题，现在把代码粘在这里<br>从本期开始，鄙人将开始完全放飞自我，不会吝啬任何标准库C++语句（保证数据结构为C语言结构以及设计思想仍为面向过程）</p></blockquote><h2 id="顺序表"><a href="#顺序表" class="headerlink" title="顺序表"></a>顺序表</h2><h3 id="question1-插入"><a href="#question1-插入" class="headerlink" title="question1 插入"></a>question1 插入</h3><p><a href="https://imgchr.com/i/8EB81g" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/11/8EB81g.md.png" srcset="/img/loading.gif" alt="8EB81g.png" border="0" /></a></p><blockquote><p>tips：为了加快遍历速度。采用了二分查找</p></blockquote><pre><code class="C++">#include&lt;iostream&gt;using namespace std;int search(int n,int x,int *p) //二分查找，确定插入位置 {    int l=0,r=n-1,mid=(l+r)/2;    if(p[r]&lt;x)        return r+1;     while(l&lt;r)    {        if(x&lt;p[mid])        {            r=mid;            mid=(l+r)/2;        }        else        {            l=mid+1;            mid=(l+r)/2;        }    }    return mid;}int main(){    int a,b;    cout&lt;&lt;&quot;input length&quot;&lt;&lt;endl;    cin&gt;&gt;a; //输入数组长度    int *p=new int[a+1];    for(int i=0;i&lt;a;i++){        cin&gt;&gt;p[i] ;        if(i&gt;0){            if(p[i]&lt;=p[i-1]){                cout&lt;&lt;&quot;invalid!&quot;&lt;&lt;endl; //如果数组不是递增排列，则显示非法                 return 1;            }        }    }      cout&lt;&lt;&quot;input num u want insert&quot;&lt;&lt;endl;    cin&gt;&gt;b; //输入要插入的数     int pos=search(a,b,p);    //cout&lt;&lt;pos;    //重排数组     for(int i=a;i&gt;pos;i--){        p[i]=p[i-1];    }     p[pos]=b;    //输出     for(int i=0;i&lt;=a;++i)    {        printf(&quot;%d &quot;,p[i]);    }    return 0;}</code></pre><h3 id="question2-就地逆置"><a href="#question2-就地逆置" class="headerlink" title="question2 就地逆置"></a>question2 就地逆置</h3><p><a href="https://imgchr.com/i/8EBgBR" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/11/8EBgBR.md.png" srcset="/img/loading.gif" alt="8EBgBR.png" border="0" /></a></p><pre><code class="C++">#include &lt;iostream&gt;using namespace std;void Reverse(int *L,int len){   int i,temp;   for(i = 0; i &lt; len/2; i++){        temp = *(L+i);        *(L+i)= *(L+len-i-1);        *(L+len-i-1)= temp;   }}int main(){    int a,b;    cout&lt;&lt;&quot;input length&quot;&lt;&lt;endl;    cin&gt;&gt;a; //输入数组长度    int *p=new int[a+1];    for(int i=0;i&lt;a;i++){        cin&gt;&gt;p[i] ;    }      Reverse(p,a);     for(int i=0;i&lt;a;i++){        cout&lt;&lt;p[i] ;    }  }</code></pre><h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><p><a href="https://imgchr.com/i/8ErDOJ" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2020/03/11/8ErDOJ.md.png" srcset="/img/loading.gif" alt="8ErDOJ.png" border="0" /></a></p><h3 id="question1-删除元素"><a href="#question1-删除元素" class="headerlink" title="question1 删除元素"></a>question1 删除元素</h3><blockquote><p>这个没什么可说的，基本操作</p></blockquote><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;    node* next;}node, * linklist;//创建链表void create(linklist &amp;p) {    p = new node;    int len,num;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data&quot; &lt;&lt; endl;;    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num;  //输入数据        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }}//删除元素void del(linklist &amp;p,int mink,int maxk) {    linklist a,b;    a = p;    b = p;    while (a-&gt;next-&gt;data &lt; mink) {        a = a-&gt;next;        b = b-&gt;next;    }    while (b-&gt;next-&gt;data &lt;= maxk ) {        b = b-&gt;next;        if (b-&gt;next == NULL) {            break;        }    }    a-&gt;next = b-&gt;next;}int main() {    linklist p;    create(p);    int mink, maxk;    cout &lt;&lt; &quot;input min and max&quot; &lt;&lt; endl;    cin &gt;&gt; mink &gt;&gt; maxk;    del(p, mink, maxk);    cout &lt;&lt; &quot;answer：&quot; &lt;&lt; endl;;    //打印链表    while (p-&gt;next != NULL) {        cout &lt;&lt; p-&gt;next-&gt;data&lt;&lt;&quot; &quot;;            p = p-&gt;next;    }}</code></pre><h3 id="question2-循环链表就地逆置"><a href="#question2-循环链表就地逆置" class="headerlink" title="question2 循环链表就地逆置"></a>question2 循环链表就地逆置</h3><blockquote><p>tips：和单链表逆置比起来可能更简单，毕竟不需要判断位置(循环长度)</p></blockquote><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;    node* next;}node, * linklist;//创建链表int create(linklist &amp;p) {    p = new node;    int len,num;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data&quot; &lt;&lt; endl;;    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num;  //输入数据        if (i == 0) {            p-&gt;data = num;            continue;        }        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }    tmp-&gt;next = p;    return len;}//逆置链表void reverse(linklist &amp;p,int len) {    linklist a, b,c;    //判断链表是否非法    if (p == NULL || p-&gt;next == NULL) {        cout &lt;&lt; &quot;invalid!&quot; &lt;&lt; endl;        return;    }    a = p;    b = p-&gt;next;    c = p-&gt;next-&gt;next;    a-&gt;next = NULL;    for (int i = 0; i &lt; len; i++) {        b-&gt;next = a;        a = b;        b = c;        if (i == len - 1) {            continue;        }        c = c-&gt;next;            }}int main() {    linklist p;    int num=create(p);    reverse(p, num);    cout &lt;&lt; &quot;answer：&quot; &lt;&lt; endl;;    //打印链表    for(int i=0;i&lt;num;i++) {        cout &lt;&lt; p-&gt;data&lt;&lt;&quot; &quot;;            p = p-&gt;next;    }}</code></pre><h3 id="question3-计算多项式"><a href="#question3-计算多项式" class="headerlink" title="question3 计算多项式"></a>question3 计算多项式</h3><blockquote><p>tips：把系数也作为数据存入结点</p></blockquote><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;    int factorial;    node* next;}node, * linklist;//创建链表int create(linklist&amp; p) {    p = new node;    int len, num, num2;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data and factorial&quot; &lt;&lt; endl; //输入系数和阶乘    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num &gt;&gt; num2;  //输入数据        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;factorial = num2;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }    return len;}//计算,参数为链表和变量int calc(linklist&amp; p, int num) {    linklist tmp = p;    int ans = 0;    while (tmp-&gt;next != NULL) {        tmp = tmp-&gt;next;        ans = ans + tmp-&gt;data * (pow(num, tmp-&gt;factorial));    }    return ans;}int main() {    linklist p;    int num, sum;    create(p);    cout &lt;&lt; &quot;imput data&quot; &lt;&lt; endl;    cin &gt;&gt; num;    sum = calc(p, num);    cout &lt;&lt; &quot;answer：&quot; &lt;&lt; sum &lt;&lt; endl;}</code></pre><h3 id="插入-就地逆置"><a href="#插入-就地逆置" class="headerlink" title="插入+就地逆置"></a>插入+就地逆置</h3><blockquote><p>tips：最简单的办法就是插入之后逆置。提高时间复杂度可以考虑边插入边逆置，但这么做需要考虑一些判断和循环，比较费时间（好吧，我又懒了），所以我才用了相对省脑子的解法<br>这个代码我并不是很满意，当时写的时候写错了一个逻辑，然后用调试器调的错误，以后有时间会把这个代码重写一下</p></blockquote><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt;  #include &lt;stdlib.h&gt; using namespace std;typedef struct node {    int data;    node* next;}node, * linklist;//创建链表int create(linklist&amp; p) {    p = new node;    int len, num;    linklist tmp, tmp2;    p-&gt;next = NULL;    tmp = p;    cout &lt;&lt; &quot;length&quot; &lt;&lt; endl; //输入链表长度    cin &gt;&gt; len;    cout &lt;&lt; &quot;input data&quot; &lt;&lt; endl; //输入数据    for (int i = 0; i &lt; len; i++) {        cin &gt;&gt; num ;  //输入数据        tmp2 = new node;        tmp2-&gt;data = num;        tmp2-&gt;next = NULL;        tmp-&gt;next = tmp2;        tmp = tmp-&gt;next;    }    return len;}void insert(linklist&amp; pa, linklist&amp; pb) {    linklist a1 = pa;    linklist b1 = pb;    int num = 0;    linklist a2 = pa-&gt;next;    b1 = b1-&gt;next;    while (a2 !=NULL &amp;&amp; b1 != NULL) {        if (b1-&gt;data &lt;= a2-&gt;data) {            linklist tmp = a1;            tmp -&gt; next = b1;            linklist tmp2 = b1;            b1 = b1-&gt;next;            tmp2-&gt;next = a2;            a1 = tmp2;            num = 0;        }        else if (b1-&gt;data &gt; a2-&gt;data) {            a1 = a1-&gt;next;            if (a2-&gt;next == NULL) {                num = 1;                break;            }            a2 = a2-&gt;next;            num = 1;        }        }    if (num == 1) {        a2-&gt;next = b1;    }}linklist reverse(linklist &amp;pa){    linklist p1 = pa;    linklist p2 = pa-&gt;next;    linklist p3 = pa-&gt;next-&gt;next;    p1-&gt;next = NULL;    while (p2-&gt;next != NULL) {        p2-&gt;next = p1;        p1 = p2;        p2 = p3;        p3 = p3-&gt;next;    }    p2-&gt;next = p1;    return p2;}void print(linklist&amp; pa) {    linklist tmp = pa;    while (tmp-&gt;next != NULL) {        cout &lt;&lt; tmp-&gt;data &lt;&lt; endl;        tmp = tmp-&gt;next;    }}int main() {    linklist pa,pb,pc;    int num;    create(pa);    create(pb);    insert(pa, pb);    pc=reverse(pa);    //print(pa);    //print(pb);    //reverse(pa);    print(pc);}</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>代码问题还是有很多的，毕竟为了应付作业，没太考虑简化代码，欢迎大家提出意见</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>数据结构与算法</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>C++</tag>
       
     </tags>
     
@@ -404,56 +329,6 @@
       <tag>漏洞利用</tag>
       
       <tag>kali</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>链表变体与约瑟夫环</title>
-    <link href="/2020/03/10/linklist2/"/>
-    <url>/2020/03/10/linklist2/</url>
-    
-    <content type="html"><![CDATA[<blockquote><p>这一章节如果涉及到算法其实还是挺多的，但是基本知识基本上跟单链表没啥区别。</p></blockquote><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>了解循环链表，双向链表（这一部分真的不想贴代码了，跟单链表感觉没啥区别，都是操作指针。</p><h2 id="循环链表"><a href="#循环链表" class="headerlink" title="循环链表"></a>循环链表</h2><p>没啥特别的，单链表尾指针指向头节点。</p><h2 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h2><p>插入：<br>和单链表一样，需要辅助链表定位插入的前后结点，操作基本与单链表相同，只是多调整一个前指针而已。</p><p>删除：<br>参考单链表删除，调整结点指针，释放目标空间。</p><h2 id="小游戏：约瑟夫环"><a href="#小游戏：约瑟夫环" class="headerlink" title="小游戏：约瑟夫环"></a>小游戏：约瑟夫环</h2><p>下面玩个有意思的：约瑟夫和他的40个战友被罗马军队包围在洞中。他们讨论是自杀还是被俘，最终决定自杀，自杀方法是，大家轮流报数，报到7的人自杀，直到所有人死去。约瑟夫斯和另外一个人是最后两个留下的人。约瑟夫斯说服了那个人，他们将向罗马军队投降，不再自杀。约瑟夫斯把他的存活归因于运气或天意，他不知道是哪一个。</p><p>事实上，我们可以通过循环链表解决这个问题。</p><blockquote><p>tips：本期初始化函数已经开始使用new，但仍然采用C语言的参数传递模式，在下一期开始将完全使用C++引用模式以简化程序。同时，cout，cin函数及C++头文件已经引入，用于简化程序。</p></blockquote><p>完整源码：</p><pre><code class="C++">#include &lt;iostream&gt;#include &lt;stdio.h&gt; #include &lt;stdlib.h&gt;using namespace std;typedef struct node { int data; node* next;}node, * linklist;//创建循环链表linklist create() { node* p; p = new node; p-&gt;next = NULL; p-&gt;data = 41; for (int i = 1; i &lt; 41; i++) {  node* q = new node;  q-&gt;next = p-&gt;next;  q-&gt;data = 41 - i;  p-&gt;next = q;  if (i == 1) {   q-&gt;next = p;  } } return p;}int main() { node* joseph = new node; joseph = create(); node* t = joseph; node* tmp = joseph; node* tmp2; int num = 0; int count = 0; //开始递进 for (int i = 0; ; i++) {  tmp2 = tmp;  tmp = tmp-&gt;next;  num = num + 1;  //到7删除  if (num == 7) {   tmp2-&gt;next = tmp-&gt;next;   free(tmp);   tmp = tmp2-&gt;next;   num = 1;   count++;  }  //剩两人跳出  if (count == 39) {   break;  } } //结果输出 cout &lt;&lt; tmp-&gt;data &lt;&lt; &quot; &quot; &lt;&lt; tmp-&gt;next-&gt;data;} </code></pre><h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>上面的代码可能并不是很简单，但符合我的编写习惯，欢迎大家给我提意见。<br>约瑟夫环事实上可以使用递归求解，当然理解难度较大，有兴趣的同学可以查一下。</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>数据结构与算法</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>C++</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>单链表</title>
-    <link href="/2020/03/10/linklist/"/>
-    <url>/2020/03/10/linklist/</url>
-    
-    <content type="html"><![CDATA[<blockquote><p>本栏目是我新博客的第一个栏目，写这个栏目的原因是这学期有数据结构课程，一方面让自己复习一下，另一方面希望能帮助到有需要的同学。本栏目使用语言为C++，但由于课程要求为类C，且大部分同学没有C++经验，因此大部分语言结构基于C语言。</p></blockquote><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>单链表的初始化，建立，插入，查找，删除</p><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>单链表的结构很简单：仅由数据和指针组成</p><pre><code class="C++">typedef struct Node{    int data;              //单链表中的数据域 ，本示例用的int型    struct Node *next;          //单链表的指针域 }Node,*LinkedList;</code></pre><h3 id="初始化链表过程："><a href="#初始化链表过程：" class="headerlink" title="初始化链表过程："></a>初始化链表过程：</h3><pre><code class="C++">LinkedList LinkedListInit(){    Node *L;    L = (Node *)malloc(sizeof(Node));   //申请结点空间     if(L == NULL)                       //判断是否有足够的内存空间         printf(&quot;申请内存空间失败/n&quot;);    L-&gt;next = NULL;                  //将next设置为NULL,初始长度为0的单链表 }</code></pre><h2 id="建立"><a href="#建立" class="headerlink" title="建立"></a>建立</h2><p>建立链表分为头插法和尾插法</p><h3 id="头插法"><a href="#头插法" class="headerlink" title="头插法"></a>头插法</h3><p>头插法，就是每一次插入都是从链表头插入，实现也比较简单：</p><pre><code class="C++">LinkedList LinkedListCreatH(){    Node *L;    L = (Node *)malloc(sizeof(Node));   //申请头结点空间    L-&gt;next = NULL;                      //初始化一个空链表    int x;                         //x为链表数据域中的数据    while(scanf(&quot;%d&quot;,&amp;x) != EOF)    {        Node *p;        p = (Node *)malloc(sizeof(Node));   //申请新的结点         p-&gt;data = x;                     //结点数据域赋值         p-&gt;next = L-&gt;next;                           L-&gt;next = p;     }    return L; } </code></pre><h3 id="尾插法"><a href="#尾插法" class="headerlink" title="尾插法"></a>尾插法</h3><p>每一次从链表尾部插入，这一过程通常需要借助一个辅助链表，简要描述此过程：</p><p>1 辅助链表r和原始链表L重合</p><p>2 创建P，给P赋值</p><p>3 将原始链表空指针指向p，将r指向尾结点</p><pre><code class="C++">LinkedList LinkedListCreatT(){    Node *L;    L = (Node *)malloc(sizeof(Node));   //申请头结点空间    L-&gt;next = NULL;                  //初始化一个空链表    Node *r;    r = L;                          //r始终指向终端结点，开始时指向头结点     int x;                         //x为链表数据域中的数据    while(scanf(&quot;%d&quot;,&amp;x) != EOF)    {        Node *p;        p = (Node *)malloc(sizeof(Node));   //申请新的结点         p-&gt;data = x;                     //结点数据域赋值         r-&gt;next = p;                 //将结点插入到表头L--&gt;|1|--&gt;|2|--&gt;NULL         r = p;     }    r-&gt;next = NULL;     return L;   }  </code></pre><h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>了解了建立链表，插入就简单了，例如在i位置插入x</p><pre><code class="C++">LinkedList LinkedListInsert(LinkedList L,int i,int x){    Node *pre;                      //pre为前驱结点     pre = L;    int tempi = 0;    for (tempi = 1; tempi &lt; i; tempi++)        pre = pre-&gt;next;                 //查找第i个位置的前驱结点     Node *p;                                //插入的结点为p    p = (Node *)malloc(sizeof(Node));    p-&gt;data = x;     p-&gt;next = pre-&gt;next;    pre-&gt;next = p;    return L;                           }   </code></pre><h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>对于删除一段链表，我们需要借助两个辅助链表分别指向被删除段和被删除段的前一段，然后让链表重新指过去就好了。</p><pre><code class="C++"> LinkedList LinkedListDelete(LinkedList L,ElemType x){    Node *p,*pre;                   //pre为前驱结点，p为查找的结点。     p = L-&gt;next;    while(p-&gt;data != x)              //查找值为x的元素     {           pre = p;         p = p-&gt;next;    }    pre-&gt;next = p-&gt;next;          //删除操作，将其前驱next指向其后继。     free(p);    return L;}   </code></pre><h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>在之后的章节，我会使用new代替malloc函数，并使用一些很简单的C++语句，习惯问题，大家理解。</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>数据结构与算法</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>C++</tag>
       
     </tags>
     
