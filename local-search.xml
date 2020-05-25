@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>GKCTF2020 部分wp</title>
+    <link href="/2020/05/25/202005251634/"/>
+    <url>/2020/05/25/202005251634/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>本次GKCTF对re属实不太友好，在短时间内这几个re还真的不太好弄（还是我太菜了）</p></blockquote><h2 id="re-check-in"><a href="#re-check-in" class="headerlink" title="re check_in"></a>re check_in</h2><p>进入程序，找到密码HelloWorld，进入程序之后进flag，提示去玩打砖块，游戏结束后弹出flag。</p><h2 id="crypto-babycrypto"><a href="#crypto-babycrypto" class="headerlink" title="crypto babycrypto"></a>crypto babycrypto</h2><p>已知高位的coopersmith，几乎是原题，代码如下</p><pre><code class="python"># 用sage运行n =0xb119849bc4523e49c6c038a509a74cda628d4ca0e4d0f28e677d57f3c3c7d0d876ef07d7581fe05a060546fedd7d061d3bc70d679b6c5dd9bc66c5bdad8f2ef898b1e785496c4989daf716a1c89d5c174da494eee7061bcb6d52cafa337fc2a7bba42c918bbd3104dff62ecc9d3704a455a6ce282de0d8129e26c840734ffd302bec5f0a66e0e6d00b5c50fa57c546cff9d7e6a978db77997082b4cb927df9847dfffef55138cb946c62c9f09b968033745b5b6868338c64819a8e92a827265f9abd409359a9471d8c3a2631b80e5b462ba42336717700998ff38536c2436e24ac19228cd2d7a909ead1a8494ff6c3a7151e888e115b68cc6a7a8c6cf8a6c005p_fake =0xe4e4b390c1d201dae2c00a4669c0865cc5767bc444f5d310f3cfc75872d96feb89e556972c99ae20753e3314240a52df5dccd076a47c6b5d11b531b92d901b2b512aeb0b263bbfd624fe3d52e5e238beeb581ebe012b2f176a4ffd1e0d2aa8c4d3a2656573b727d4d3136513a931428b00000000000000000000000000000000#pbits = 2048pbits = p_fake.nbits()#kbits = 900kbits = 128  #p失去的低位pbar = p_fake &amp; (2^pbits-2^kbits)print &quot;upper %d bits (of %d bits) is given&quot; % (pbits-kbits, pbits)PR.&lt;x&gt; = PolynomialRing(Zmod(n))f = x + pbarx0 = f.small_roots(X=2^kbits, beta=0.4)[0]  # find root &lt; 2^kbits with factor &gt;= n^0.3p= x0 + pbarprint p</code></pre><p>求出p后解rsa</p><pre><code class="python">import gmpy2import base64n=0xb119849bc4523e49c6c038a509a74cda628d4ca0e4d0f28e677d57f3c3c7d0d876ef07d7581fe05a060546fedd7d061d3bc70d679b6c5dd9bc66c5bdad8f2ef898b1e785496c4989daf716a1c89d5c174da494eee7061bcb6d52cafa337fc2a7bba42c918bbd3104dff62ecc9d3704a455a6ce282de0d8129e26c840734ffd302bec5f0a66e0e6d00b5c50fa57c546cff9d7e6a978db77997082b4cb927df9847dfffef55138cb946c62c9f09b968033745b5b6868338c64819a8e92a827265f9abd409359a9471d8c3a2631b80e5b462ba42336717700998ff38536c2436e24ac19228cd2d7a909ead1a8494ff6c3a7151e888e115b68cc6a7a8c6cf8a6c005c = 1422566584480199878714663051468143513667934216213366733442059106529451931078271460363335887054199577950679102659270179475911101747625120544429262334214483688332111552004535828182425152965223599160129610990036911146029170033592055768983427904835395850414634659565092191460875900237711597421272312032796440948509724492027247376113218678183443222364531669985128032971256792532015051829041230203814090194611041172775368357197854451201260927117792277559690205342515437625417792867692280849139537687763919269337822899746924269847694138899165820004160319118749298031065800530869562704671435709578921901495688124042302500361p = 160734387026849747944319274262095716650717626398118440194223452208652532694713113062084219512359968722796763029072117463281356654614167941930993838521563406258263299846297499190884495560744873319814150988520868951045961906000066805136724505347218275230562125457122462589771119429631727404626489634314291445667q=n//pe = 0x10001phi_n = (p-1)*(q-1)d = gmpy2.invert(e, phi_n)n=p*qm = pow(c, d, n)print(hex(m))flag = str(hex(m))[2:]print &#39;hex:&#39;+flagprint &#39;str:&#39;+flag.decode(&#39;hex&#39;)</code></pre><h2 id="crypto-小学生的密码学"><a href="#crypto-小学生的密码学" class="headerlink" title="crypto 小学生的密码学"></a>crypto 小学生的密码学</h2><p>affine，网上脚本一堆</p><h2 id="crypto-汉字的秘密（unsolved）"><a href="#crypto-汉字的秘密（unsolved）" class="headerlink" title="crypto 汉字的秘密（unsolved）"></a>crypto 汉字的秘密（unsolved）</h2><p>吃了没文化的亏，比完赛后才知道是当铺密码。然后逐位+1、+2…</p><p>当铺密码：出头数量代表数字，如由代表1，土代表5</p><h2 id="misc-签到"><a href="#misc-签到" class="headerlink" title="misc 签到"></a>misc 签到</h2><p>略</p><h2 id="misc-Pokemon"><a href="#misc-Pokemon" class="headerlink" title="misc Pokemon"></a>misc Pokemon</h2><p>GBA模拟器玩游戏，到103道路可以看到flag，小技巧是可以用pkhex改数据打NPC。</p><h2 id="code-obfuscation-unsolved"><a href="#code-obfuscation-unsolved" class="headerlink" title="code obfuscation (unsolved)"></a>code obfuscation (unsolved)</h2><p>最近对二维码很感兴趣，不过绘制二维码还是费劲…</p><p>附上一个大佬绘制的</p><p><img src="C31BDFFCAE744F3FBA15694C2543E553" srcset="/img/loading.gif" alt="image"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CTF比赛wp</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>信息安全</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>pwn入门（1）basicROP</title>
     <link href="/2020/05/11/202005111717/"/>
     <url>/2020/05/11/202005111717/</url>
